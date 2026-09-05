@@ -505,11 +505,14 @@ section.tight { padding: 4rem 0; }
 
 .detail-nav a:nth-child(2) { max-width: none; }
 
+.detail-nav-solo { justify-content: center; }
+
 @media (max-width: 700px) {
   .detail-nav {
     flex-direction: column;
     align-items: flex-start;
   }
+  .detail-nav-solo { align-items: center; }
   .detail-nav a { max-width: 100%; }
 }
 

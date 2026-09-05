@@ -1,12 +1,23 @@
 #!/usr/bin/env python3
-"""Generates the 11 detail pages (6 experience + 5 project) from one
-shared template + a data list, so every page stays visually consistent.
-Edit the DATA list below (or just edit the generated HTML files directly
-afterward) to swap in real content.
+"""Generates all detail pages (experience: work/research/leadership, and
+projects) from one shared template + a data list, so every page stays
+visually consistent. Edit the DATA lists below (or just edit the generated
+HTML files directly afterward) to swap in real content.
+
+Prev/Next navigation on each page cycles within its own category (e.g. a
+Work Experience page only links to other Work Experience pages), and the
+breadcrumb/"back to" link reflects that category.
 """
 import os
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
+
+CATEGORY_META = {
+    "work": {"id": "work", "label": "Work Experience"},
+    "research": {"id": "research", "label": "Research"},
+    "leadership": {"id": "leadership", "label": "Leadership"},
+    "projects": {"id": "projects", "label": "Projects"},
+}
 
 TEMPLATE = """<!doctype html>
 <html lang="en">
@@ -24,7 +35,9 @@ TEMPLATE = """<!doctype html>
     <a href="../index.html" class="nav-logo">Suraj Duvvapu</a>
     <ul class="nav-links">
       <li><a href="../index.html#about">About</a></li>
-      <li><a href="../index.html#experience">Experience</a></li>
+      <li><a href="../index.html#work">Work</a></li>
+      <li><a href="../index.html#research">Research</a></li>
+      <li><a href="../index.html#leadership">Leadership</a></li>
       <li><a href="../index.html#projects">Projects</a></li>
       <li><a href="../index.html#contact">Contact</a></li>
     </ul>
@@ -82,15 +95,8 @@ TEMPLATE = """<!doctype html>
     </aside>
   </div>
 
-  <div class="detail-nav">
-    <a href="{prev_href}" class="link-arrow">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="transform: scaleX(-1);"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      &nbsp;{prev_org}
-    </a>
-    <a href="../index.html#{section_id}" class="link-arrow">Back to all {crumb_label_lower}</a>
-    <a href="{next_href}" class="link-arrow">{next_org}&nbsp;
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-    </a>
+  <div class="detail-nav{nav_class}">
+    {nav_html}
   </div>
 </div>
 
@@ -121,9 +127,12 @@ TEMPLATE = """<!doctype html>
 </html>
 """
 
+ARROW_LEFT = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="transform: scaleX(-1);"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>'
+ARROW_RIGHT = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>'
+
 EXPERIENCE = [
     dict(
-        slug="tesla", org="Tesla", title="Mechanical Design Engineering Intern",
+        slug="tesla", category="work", org="Tesla", title="Mechanical Design Engineering Intern",
         dates="Placeholder dates", location="Placeholder site (e.g. Fremont, CA)",
         lede="Placeholder one-sentence summary of the internship — which team, which vehicle program or subsystem.",
         overview="Replace with 2-3 sentences of context: which team you joined, what problem the team owns, and where your work fit into the broader program.",
@@ -134,7 +143,7 @@ EXPERIENCE = [
         links=[("Company site", "https://www.tesla.com")],
     ),
     dict(
-        slug="collins-aerospace", org="Collins Aerospace", title="Manufacturing and Operations Intern",
+        slug="collins-aerospace", category="work", org="Collins Aerospace", title="Manufacturing Engineering and Operations Co-Op",
         dates="Placeholder dates", location="Placeholder site",
         lede="Placeholder one-sentence summary — which production line or process you supported.",
         overview="Replace with context on the business unit, product line, and the operational problem you were brought in to help with.",
@@ -145,7 +154,7 @@ EXPERIENCE = [
         links=[("Company site", "https://www.collinsaerospace.com")],
     ),
     dict(
-        slug="midwest-nice", org="University of Illinois — Midwest NICE Aerospace Engineering Group",
+        slug="midwest-nice", category="research", org="University of Illinois — Midwest NICE Aerospace Engineering Group",
         title="Undergraduate Researcher",
         dates="Placeholder dates", location="Urbana-Champaign, IL",
         lede="Placeholder one-sentence summary of the research focus and your role in it.",
@@ -157,7 +166,7 @@ EXPERIENCE = [
         links=[("Research group site", "#")],
     ),
     dict(
-        slug="baur-research-group", org="University of Illinois — Baur Research Group",
+        slug="baur-research-group", category="research", org="University of Illinois — Baur Research Group",
         title="Undergraduate Researcher",
         dates="Placeholder dates", location="Urbana-Champaign, IL",
         lede="Placeholder one-sentence summary of the research focus and your role in it.",
@@ -169,7 +178,7 @@ EXPERIENCE = [
         links=[("Research group site", "#")],
     ),
     dict(
-        slug="motion-teaming-lab", org="University of Maryland — Motion and Teaming Laboratory",
+        slug="motion-teaming-lab", category="research", org="University of Maryland — Motion and Teaming Laboratory",
         title="Intern",
         dates="Placeholder dates", location="College Park, MD",
         lede="Placeholder one-sentence summary of the lab's focus and your role.",
@@ -181,7 +190,7 @@ EXPERIENCE = [
         links=[("Lab site", "#")],
     ),
     dict(
-        slug="formula-sae", org="Illini Electric Motorsports — Formula SAE",
+        slug="formula-sae", category="leadership", org="Illini Electric Motorsports — Formula SAE",
         title="Aerodynamics Project Lead",
         dates="Placeholder dates", location="Urbana-Champaign, IL",
         lede="Placeholder one-sentence summary — led the team's aero package design.",
@@ -196,7 +205,7 @@ EXPERIENCE = [
 
 PROJECTS = [
     dict(
-        slug="fea-final-project", org="Finite Element Analysis", title="FEA Final Project",
+        slug="fea-final-project", category="projects", org="Finite Element Analysis", title="FEA Final Project",
         dates="Placeholder course/semester", location="University of Illinois",
         lede="Placeholder one-sentence summary of the structure/component analyzed and the goal of the project.",
         overview="Replace with the problem statement: what structure or component you modeled, and what question the analysis needed to answer.",
@@ -207,7 +216,7 @@ PROJECTS = [
         links=[("Report / code", "#")],
     ),
     dict(
-        slug="fea-midterm-project", org="Finite Element Analysis", title="FEA Midterm Project",
+        slug="fea-midterm-project", category="projects", org="Finite Element Analysis", title="FEA Midterm Project",
         dates="Placeholder course/semester", location="University of Illinois",
         lede="Placeholder one-sentence summary of the analysis performed.",
         overview="Replace with the problem statement and scope of the midterm assignment.",
@@ -218,7 +227,7 @@ PROJECTS = [
         links=[("Report / code", "#")],
     ),
     dict(
-        slug="ae353-final-project", org="AE 353 — Aerospace Control Systems", title="AE 353 Final Project",
+        slug="ae353-final-project", category="projects", org="AE 353 — Aerospace Control Systems", title="AE 353 Final Project",
         dates="Placeholder course/semester", location="University of Illinois",
         lede="Placeholder one-sentence summary of the dynamic system modeled and controlled.",
         overview="Replace with the problem statement: the system's dynamics and the control objective.",
@@ -229,7 +238,7 @@ PROJECTS = [
         links=[("Report / code", "#")],
     ),
     dict(
-        slug="ae353-project-2", org="AE 353 — Aerospace Control Systems", title="AE 353 Project 2",
+        slug="ae353-project-2", category="projects", org="AE 353 — Aerospace Control Systems", title="AE 353 Project 2",
         dates="Placeholder course/semester", location="University of Illinois",
         lede="Placeholder one-sentence summary of the system modeled and controlled.",
         overview="Replace with the problem statement: the system's dynamics and the control objective.",
@@ -240,7 +249,7 @@ PROJECTS = [
         links=[("Report / code", "#")],
     ),
     dict(
-        slug="ae370-final-project", org="AE 370 — Numerical Methods", title="AE 370 Final Project",
+        slug="ae370-final-project", category="projects", org="AE 370 — Numerical Methods", title="AE 370 Final Project",
         dates="Placeholder course/semester", location="University of Illinois",
         lede="Placeholder one-sentence summary of the numerical method implemented and the problem it solved.",
         overview="Replace with the problem statement and why a numerical approach was needed.",
@@ -253,12 +262,32 @@ PROJECTS = [
 ]
 
 
-def render_group(items, section_id, crumb_label, out_dir):
+def build_nav_html(prev_item, next_item, section_id, crumb_label):
+    back = f'<a href="../index.html#{section_id}" class="link-arrow">Back to all {crumb_label.lower()}</a>'
+    if prev_item is None and next_item is None:
+        return back
+    prev_link = f'<a href="{prev_item["slug"]}.html" class="link-arrow">{ARROW_LEFT}&nbsp;{prev_item["org"]}</a>'
+    next_link = f'<a href="{next_item["slug"]}.html" class="link-arrow">{next_item["org"]}&nbsp;{ARROW_RIGHT}</a>'
+    return f"{prev_link}\n    {back}\n    {next_link}"
+
+
+def render_group(items, out_dir):
     os.makedirs(out_dir, exist_ok=True)
-    n = len(items)
-    for i, item in enumerate(items):
-        prev_item = items[(i - 1) % n]
-        next_item = items[(i + 1) % n]
+    # group items by category so prev/next cycles within the same category
+    by_category = {}
+    for item in items:
+        by_category.setdefault(item["category"], []).append(item)
+
+    for item in items:
+        cat = CATEGORY_META[item["category"]]
+        siblings = by_category[item["category"]]
+        if len(siblings) > 1:
+            i = siblings.index(item)
+            prev_item = siblings[(i - 1) % len(siblings)]
+            next_item = siblings[(i + 1) % len(siblings)]
+        else:
+            prev_item = next_item = None
+
         tag_html = "\n        ".join(f'<span class="tag">{t}</span>' for t in item["tags"])
         links_html = "\n        ".join(
             f'<li><a href="{href}" target="_blank" rel="noopener">{label} &rarr;</a></li>'
@@ -278,13 +307,10 @@ def render_group(items, section_id, crumb_label, out_dir):
             outcome=item["outcome"],
             tag_html=tag_html,
             links_html=links_html,
-            section_id=section_id,
-            crumb_label=crumb_label,
-            crumb_label_lower=crumb_label.lower(),
-            prev_href=f"{prev_item['slug']}.html",
-            next_href=f"{next_item['slug']}.html",
-            prev_org=prev_item["org"],
-            next_org=next_item["org"],
+            section_id=cat["id"],
+            crumb_label=cat["label"],
+            nav_html=build_nav_html(prev_item, next_item, cat["id"], cat["label"]),
+            nav_class="" if (prev_item or next_item) else " detail-nav-solo",
         )
         path = os.path.join(out_dir, f"{item['slug']}.html")
         with open(path, "w") as f:
@@ -292,5 +318,5 @@ def render_group(items, section_id, crumb_label, out_dir):
         print("wrote", path)
 
 
-render_group(EXPERIENCE, "experience", "Experience", os.path.join(ROOT, "experience"))
-render_group(PROJECTS, "projects", "Projects", os.path.join(ROOT, "projects"))
+render_group(EXPERIENCE, os.path.join(ROOT, "experience"))
+render_group(PROJECTS, os.path.join(ROOT, "projects"))
