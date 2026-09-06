@@ -1,5 +1,5 @@
 // ============================================================
-// Shared interaction layer — nav shrink/blur, mobile menu,
+// Shared interaction layer: nav shrink/blur, mobile menu,
 // and scroll-reveal for cards/sections.
 // ============================================================
 

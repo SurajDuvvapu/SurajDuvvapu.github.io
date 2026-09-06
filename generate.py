@@ -24,7 +24,7 @@ TEMPLATE = """<!doctype html>
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>{title} — {org} | Suraj Duvvapu</title>
+<title>{title}, {org} | Suraj Duvvapu</title>
 <meta name="description" content="{lede_plain}" />
 <link rel="stylesheet" href="../styles.css" />
 </head>
@@ -65,9 +65,7 @@ TEMPLATE = """<!doctype html>
 </header>
 
 <div class="container">
-  <div class="media-frame reveal">
-    Add a photo, render, CAD screenshot, or diagram here — replace this placeholder frame in {org_slug}.html.
-  </div>
+  {media_html}
 
   <div class="detail-grid">
     <article class="prose reveal">
@@ -130,15 +128,53 @@ TEMPLATE = """<!doctype html>
 ARROW_LEFT = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="transform: scaleX(-1);"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>'
 ARROW_RIGHT = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>'
 
+def default_media_html(org_slug):
+    """Placeholder media frame used until a page defines its own `media` (a
+    list of (src, alt, caption) tuples rendered as a media gallery, see the
+    tesla entry for an example)."""
+    return (
+        '<div class="media-frame reveal">\n'
+        '    Add a photo, render, CAD screenshot, or diagram here. '
+        f'Replace this placeholder frame in {org_slug}.html.\n'
+        '  </div>'
+    )
+
+
+def media_gallery_html(images):
+    """Builds a 3-up (responsive) image gallery. `images` is a list of
+    (src, alt, caption) tuples, with `src` relative to the experience/
+    or projects/ folder (e.g. "../assets/tesla/gantry-system.jpg")."""
+    figures = "\n    ".join(
+        f'<figure>\n'
+        f'      <div class="media-thumb">\n'
+        f'        <img src="{src}" alt="{alt}" loading="lazy" />\n'
+        f'      </div>\n'
+        f'      <figcaption>{caption}</figcaption>\n'
+        f'    </figure>'
+        for src, alt, caption in images
+    )
+    return f'<div class="media-gallery reveal">\n    {figures}\n  </div>'
+
 EXPERIENCE = [
     dict(
         slug="tesla", category="work", org="Tesla", title="Mechanical Design Engineering Intern",
         filled=True,
         dates="July 2026 – December 2026 (Tentative)", location="Elgin, Illinois",
-        lede="Designed automation hardware — gantry systems, robotic end-of-arm tooling, and conveyance — for specialized, high-volume manufacturing lines.",
+        lede="Designed automation hardware, including gantry systems, robotic end-of-arm tooling, and conveyance, for specialized, high-volume manufacturing lines.",
         note="Some details below are intentionally generalized or omitted to keep proprietary Tesla program and process information private.",
-        overview="As a Mechanical Design Engineering Intern, I designed hardware for Tesla's automated manufacturing lines — specialized systems built to handle nuanced, labor-intensive processes at high production volume. My work spanned the mechanical stack of these lines end to end, from motion systems and robotic tooling to the structural and material-handling components that tie a line together, working within a cross-functional project team to keep designs aligned with program direction and schedule.",
-        what_i_did="Designed single- and double-axis FESTO gantry systems for automated pick-and-place and process operations, including a double-axis system that picked up a tray of product, removed the individual parts from their packaging, transferred them into an oven to bake, and removed them once complete. Designed End of Arm Tooling (EOAT) for FANUC robots, along with small actuator-driven assemblies for holdowns, pick-and-place, and alignment tasks. Designed supporting mechanical systems — funnels, chutes, plates, and conveyor systems — to move product through each line, plus wire packs and wiring pathways for finished assemblies. Validated robot, gantry, and actuator designs through FEA in SolidWorks — checking weight, sizing, and moments of inertia, and how those factors changed with speed — and validated designs for manufacturing, assembly, and service feasibility against engineering requirements before releasing component designs, 2D drawings, and bills of materials (BOMs). Created timing diagrams for all robotic components to coordinate motion sequencing across each line. Worked with cross-functional teams — engineering, supply chain, production, and service — to resolve issues as they came up, and participated in sourcing and supplier relationship management. Also designed several shop-floor tools and workbenches.",
+        media=[
+            ("../assets/tesla/gantry-system.jpg",
+             "Dual-axis linear gantry system with cable carriers, representative of the FESTO gantry systems designed for automated pick-and-place operations",
+             "Representative dual-axis linear gantry system, illustrative of the FESTO gantry platforms used for automated pick-and-place operations."),
+            ("../assets/tesla/fanuc-robot.jpg",
+             "Six-axis FANUC industrial robot arm, the type of robot platform equipped with custom end-of-arm tooling",
+             "Representative six-axis FANUC robot, the platform type equipped with the custom end-of-arm tooling (EOAT) designed during this internship."),
+            ("../assets/tesla/tesla-logo.png",
+             "Tesla logo",
+             "Tesla, Mechanical Design Engineering Intern."),
+        ],
+        overview="As a Mechanical Design Engineering Intern, I designed hardware for Tesla's automated manufacturing lines: specialized systems built to handle nuanced, labor-intensive processes at high production volume. My work spanned the mechanical stack of these lines end to end, from motion systems and robotic tooling to the structural and material-handling components that tie a line together. I worked within a cross-functional project team to keep designs aligned with program direction and schedule.",
+        what_i_did="I designed single- and double-axis FESTO gantry systems for automated pick-and-place and process operations, including a double-axis system that picked up a tray of product, removed the individual parts from their packaging, transferred them into an oven to bake, and removed them once complete. I designed End of Arm Tooling (EOAT) for FANUC robots, along with small actuator-driven assemblies for holdowns, pick-and-place, and alignment tasks. I also designed supporting mechanical systems, including funnels, chutes, plates, and conveyor systems, to move product through each line, as well as wire packs and wiring pathways for finished assemblies.</p>\n      <p>I validated robot, gantry, and actuator designs through FEA in SolidWorks, checking weight, sizing, and moments of inertia and how those factors changed with speed, and I validated designs for manufacturing, assembly, and service feasibility against engineering requirements before releasing component designs, 2D drawings, and bills of materials (BOMs). I created timing diagrams for all robotic components to coordinate motion sequencing across each line. I worked with cross-functional teams, including engineering, supply chain, production, and service, to resolve issues as they came up, and I participated in sourcing and supplier relationship management. I also designed several shop-floor tools and workbenches.",
         tools_prose="All CAD modeling, FEA validation, and drawings were done in SolidWorks, applying GD&T, Design for Manufacturing (DFM), and Design for Assembly (DFA) principles throughout, and reporting FEA/DFM study findings to the team. Applied academic engineering principles and lean strategies to solve design problems. Worked across a range of materials, including aluminum and steel (sheet metal and machined variants), Delrin, and various plastics.",
         outcome="Released 20+ parts and assemblies to production, contributed to 60+ parts and assemblies overall, and created or contributed to 60+ engineering drawings.",
         tags=["SolidWorks", "FEA", "GD&T", "DFM/DFA", "FESTO Gantry Systems", "FANUC EOAT"],
@@ -147,59 +183,59 @@ EXPERIENCE = [
     dict(
         slug="collins-aerospace", category="work", org="Collins Aerospace", title="Manufacturing Engineering and Operations Co-Op",
         dates="Placeholder dates", location="Placeholder site",
-        lede="Placeholder one-sentence summary — which production line or process you supported.",
+        lede="Placeholder one-sentence summary: which production line or process you supported.",
         overview="Replace with context on the business unit, product line, and the operational problem you were brought in to help with.",
         what_i_did="Replace with specifics: process/time studies, work instructions, line-balancing, quality or yield investigations, tooling or fixture support.",
         tools_prose="Replace with the specific tools/software (e.g. Lean/Six Sigma methods, MES/ERP systems, statistical tools) you used.",
-        outcome="Replace with the measurable result — cycle time reduced, defect rate improved, throughput increased.",
+        outcome="Replace with the measurable result: cycle time reduced, defect rate improved, throughput increased.",
         tags=["Lean Manufacturing", "Process Improvement", "Operations"],
         links=[("Company site", "https://www.collinsaerospace.com")],
     ),
     dict(
-        slug="midwest-nice", category="research", org="University of Illinois — Midwest NICE Aerospace Engineering Group",
+        slug="midwest-nice", category="research", org="University of Illinois, Midwest NICE Aerospace Engineering Group",
         title="Undergraduate Researcher",
         dates="Placeholder dates", location="Urbana-Champaign, IL",
         lede="Placeholder one-sentence summary of the research focus and your role in it.",
         overview="Replace with context on the group's research area and the specific question your work addressed.",
         what_i_did="Replace with specifics: experiments run, models built, data collected/analyzed, or hardware built and tested.",
         tools_prose="Replace with the specific simulation, data-analysis, or lab tools/software you used.",
-        outcome="Replace with the result — a finding, a working prototype, a paper/poster, or a dataset that advanced the project.",
+        outcome="Replace with the result: a finding, a working prototype, a paper/poster, or a dataset that advanced the project.",
         tags=["Research", "Data Analysis"],
         links=[("Research group site", "#")],
     ),
     dict(
-        slug="baur-research-group", category="research", org="University of Illinois — Baur Research Group",
+        slug="baur-research-group", category="research", org="University of Illinois, Baur Research Group",
         title="Undergraduate Researcher",
         dates="Placeholder dates", location="Urbana-Champaign, IL",
         lede="Placeholder one-sentence summary of the research focus and your role in it.",
         overview="Replace with context on the lab's research area (e.g. structures/materials) and the specific question your work addressed.",
         what_i_did="Replace with specifics: specimens fabricated or tested, simulations run, or analysis performed.",
         tools_prose="Replace with the specific fabrication, testing, or simulation tools/software you used.",
-        outcome="Replace with the result — a finding, a working test setup, or data that advanced the project.",
+        outcome="Replace with the result: a finding, a working test setup, or data that advanced the project.",
         tags=["Research", "Materials/Structures"],
         links=[("Research group site", "#")],
     ),
     dict(
-        slug="motion-teaming-lab", category="research", org="University of Maryland — Motion and Teaming Laboratory",
+        slug="motion-teaming-lab", category="research", org="University of Maryland, Motion and Teaming Laboratory",
         title="Intern",
         dates="Placeholder dates", location="College Park, MD",
         lede="Placeholder one-sentence summary of the lab's focus and your role.",
         overview="Replace with context on the lab's research area (e.g. robotics, human-robot teaming) and where your work fit in.",
         what_i_did="Replace with specifics: hardware built, code written, experiments run, or data collected.",
         tools_prose="Replace with the specific tools/software/languages you used.",
-        outcome="Replace with the result — a working system, a finding, or a contribution to an ongoing project.",
+        outcome="Replace with the result: a working system, a finding, or a contribution to an ongoing project.",
         tags=["Robotics", "Systems"],
         links=[("Lab site", "#")],
     ),
     dict(
-        slug="formula-sae", category="leadership", org="Illini Electric Motorsports — Formula SAE",
+        slug="formula-sae", category="leadership", org="Illini Electric Motorsports, Formula SAE",
         title="Aerodynamics Project Lead",
         dates="Placeholder dates", location="Urbana-Champaign, IL",
-        lede="Placeholder one-sentence summary — led the team's aero package design.",
+        lede="Placeholder one-sentence summary: led the team's aero package design.",
         overview="Replace with context on the team, the car program/season, and your role leading the aero subteam.",
         what_i_did="Replace with specifics: CFD studies run, wing/diffuser/undertray design, wind-tunnel or track testing, and team leadership.",
         tools_prose="Replace with the specific CFD/CAD tools (e.g. SolidWorks, ANSYS Fluent) and manufacturing methods you used.",
-        outcome="Replace with the result — downforce/drag numbers achieved, competition placement, or parts manufactured and raced.",
+        outcome="Replace with the result: downforce/drag numbers achieved, competition placement, or parts manufactured and raced.",
         tags=["CFD", "Aerodynamics", "Team Leadership"],
         links=[("Team site", "#")],
     ),
@@ -213,7 +249,7 @@ PROJECTS = [
         overview="Replace with the problem statement: what structure or component you modeled, and what question the analysis needed to answer.",
         what_i_did="Replace with specifics: mesh strategy, boundary conditions/loads, material models, and solver settings.",
         tools_prose="Replace with the specific FEA software used (e.g. ANSYS, Abaqus) and any scripting/automation.",
-        outcome="Replace with the result — stresses/deflections found, design changes recommended, validation against hand calcs or test data.",
+        outcome="Replace with the result: stresses/deflections found, design changes recommended, validation against hand calcs or test data.",
         tags=["FEA", "Structural Analysis"],
         links=[("Report / code", "#")],
     ),
@@ -229,18 +265,18 @@ PROJECTS = [
         links=[("Report / code", "#")],
     ),
     dict(
-        slug="ae353-final-project", category="projects", org="AE 353 — Aerospace Control Systems", title="AE 353 Final Project",
+        slug="ae353-final-project", category="projects", org="AE 353: Aerospace Control Systems", title="AE 353 Final Project",
         dates="Placeholder dates", location="University of Illinois",
         lede="Placeholder one-sentence summary of the dynamic system modeled and controlled.",
         overview="Replace with the problem statement: the system's dynamics and the control objective.",
         what_i_did="Replace with specifics: the controller designed (e.g. state feedback, LQR), simulation setup, and tuning process.",
         tools_prose="Replace with the specific tools/languages used (e.g. Python, MATLAB/Simulink).",
-        outcome="Replace with the result — performance achieved, stability margins, or simulation results.",
+        outcome="Replace with the result: performance achieved, stability margins, or simulation results.",
         tags=["Controls", "Dynamics", "Simulation"],
         links=[("Report / code", "#")],
     ),
     dict(
-        slug="ae353-project-2", category="projects", org="AE 353 — Aerospace Control Systems", title="AE 353 Project 2",
+        slug="ae353-project-2", category="projects", org="AE 353: Aerospace Control Systems", title="AE 353 Project 2",
         dates="Placeholder dates", location="University of Illinois",
         lede="Placeholder one-sentence summary of the system modeled and controlled.",
         overview="Replace with the problem statement: the system's dynamics and the control objective.",
@@ -251,13 +287,13 @@ PROJECTS = [
         links=[("Report / code", "#")],
     ),
     dict(
-        slug="ae370-final-project", category="projects", org="AE 370 — Numerical Methods", title="AE 370 Final Project",
+        slug="ae370-final-project", category="projects", org="AE 370: Numerical Methods", title="AE 370 Final Project",
         dates="Placeholder dates", location="University of Illinois",
         lede="Placeholder one-sentence summary of the numerical method implemented and the problem it solved.",
         overview="Replace with the problem statement and why a numerical approach was needed.",
         what_i_did="Replace with specifics: the numerical scheme implemented, discretization, verification/validation approach.",
         tools_prose="Replace with the specific language/libraries used (e.g. Python, NumPy).",
-        outcome="Replace with the result — accuracy achieved, convergence behavior, or comparison to analytical/experimental results.",
+        outcome="Replace with the result: accuracy achieved, convergence behavior, or comparison to analytical/experimental results.",
         tags=["Numerical Methods", "Simulation"],
         links=[("Report / code", "#")],
     ),
@@ -299,6 +335,9 @@ def render_group(items, out_dir):
             f'<p class="text-muted reveal" style="font-size:0.92rem;font-style:italic;margin-top:0.6rem;max-width:700px;">{item["note"]}</p>'
             if item.get("note") else ""
         )
+        media_html = (
+            media_gallery_html(item["media"]) if item.get("media") else default_media_html(item["slug"])
+        )
         html = TEMPLATE.format(
             title=item["title"],
             org=item["org"],
@@ -313,6 +352,7 @@ def render_group(items, out_dir):
             outcome=item["outcome"],
             p_class="" if item.get("filled") else ' class="placeholder"',
             note_html=note_html,
+            media_html=media_html,
             tag_html=tag_html,
             links_html=links_html,
             section_id=cat["id"],
