@@ -55,6 +55,7 @@ TEMPLATE = """<!doctype html>
     <span class="eyebrow reveal">{crumb_label}</span>
     <h1 class="detail-title reveal">{title}</h1>
     <p class="detail-lede reveal">{lede}</p>
+    {note_html}
     <div class="detail-meta reveal">
       <span><strong>Organization</strong> &nbsp;{org}</span>
       <span><strong>Dates</strong> &nbsp;{dates}</span>
@@ -71,16 +72,16 @@ TEMPLATE = """<!doctype html>
   <div class="detail-grid">
     <article class="prose reveal">
       <h2>Overview</h2>
-      <p class="placeholder">{overview}</p>
+      <p{p_class}>{overview}</p>
 
       <h2>What I did</h2>
-      <p class="placeholder">{what_i_did}</p>
+      <p{p_class}>{what_i_did}</p>
 
       <h2>Tools &amp; methods</h2>
-      <p class="placeholder">{tools_prose}</p>
+      <p{p_class}>{tools_prose}</p>
 
       <h2>Outcome</h2>
-      <p class="placeholder">{outcome}</p>
+      <p{p_class}>{outcome}</p>
     </article>
 
     <aside class="sidebar reveal">
@@ -108,10 +109,9 @@ TEMPLATE = """<!doctype html>
         <p class="text-muted mt-0">Open to new grad and internship opportunities in mechanical &amp; aerospace engineering.</p>
       </div>
       <div class="footer-links">
-        <a href="mailto:your.email@example.com">Email</a>
-        <a href="#">LinkedIn</a>
-        <a href="#">GitHub</a>
-        <a href="#">Resume (PDF)</a>
+        <a href="mailto:duvvapu2@illinois.edu">Email</a>
+        <a href="https://www.linkedin.com/in/suraj-duvvapu-634833288/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/SurajDuvvapu" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
     <div class="footer-bottom">
@@ -133,13 +133,15 @@ ARROW_RIGHT = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" strok
 EXPERIENCE = [
     dict(
         slug="tesla", category="work", org="Tesla", title="Mechanical Design Engineering Intern",
-        dates="Placeholder dates", location="Placeholder site (e.g. Fremont, CA)",
-        lede="Placeholder one-sentence summary of the internship — which team, which vehicle program or subsystem.",
-        overview="Replace with 2-3 sentences of context: which team you joined, what problem the team owns, and where your work fit into the broader program.",
-        what_i_did="Replace with specific tasks: what you modeled in CAD, what you designed or redesigned, which reviews or design processes (DFM, GD&T, tolerance stacks) you participated in, and any cross-functional collaboration.",
-        tools_prose="Replace with the specific CAD package, simulation tools, and hardware/prototyping methods you used.",
-        outcome="Replace with the measurable result — parts released, cost or weight reduced, timeline met, issue resolved.",
-        tags=["CAD", "GD&T", "DFM", "Prototyping"],
+        filled=True,
+        dates="July 2026 – December 2026 (Tentative)", location="Elgin, Illinois",
+        lede="Designed automation hardware — gantry systems, robotic end-of-arm tooling, and conveyance — for specialized, high-volume manufacturing lines.",
+        note="Some details below are intentionally generalized or omitted to keep proprietary Tesla program and process information private.",
+        overview="As a Mechanical Design Engineering Intern, I designed hardware for Tesla's automated manufacturing lines — specialized systems built to handle nuanced, labor-intensive processes at high production volume. My work spanned the mechanical stack of these lines end to end, from motion systems and robotic tooling to the structural and material-handling components that tie a line together.",
+        what_i_did="Designed single- and double-axis FESTO gantry systems for automated pick-and-place and process operations, including a double-axis system that picked up a tray of product, removed the individual parts from their packaging, transferred them into an oven to bake, and removed them once complete. Designed End of Arm Tooling (EOAT) for FANUC robots, along with small actuator-driven assemblies for holdowns, pick-and-place, and alignment tasks. Designed supporting mechanical systems — funnels, chutes, plates, and conveyor systems — to move product through each line, plus wire packs and wiring pathways for finished assemblies. Created and reviewed assembly and part drawings, and emailed vendors to source specialized and off-the-shelf components. Also designed several shop-floor tools and workbenches.",
+        tools_prose="All CAD modeling and drawings were done in SolidWorks, applying GD&T, Design for Manufacturing (DFM), and Design for Assembly (DFA) principles throughout. Worked across a range of materials, including aluminum and steel (sheet metal and machined variants), Delrin, and various plastics.",
+        outcome="Released 20+ parts and assemblies to production, contributed to 60+ parts and assemblies overall, and created or contributed to 60+ engineering drawings.",
+        tags=["SolidWorks", "GD&T", "DFM/DFA", "FESTO Gantry Systems", "FANUC EOAT", "Vendor Sourcing"],
         links=[("Company site", "https://www.tesla.com")],
     ),
     dict(
@@ -206,7 +208,7 @@ EXPERIENCE = [
 PROJECTS = [
     dict(
         slug="fea-final-project", category="projects", org="Finite Element Analysis", title="FEA Final Project",
-        dates="Placeholder course/semester", location="University of Illinois",
+        dates="Placeholder dates", location="University of Illinois",
         lede="Placeholder one-sentence summary of the structure/component analyzed and the goal of the project.",
         overview="Replace with the problem statement: what structure or component you modeled, and what question the analysis needed to answer.",
         what_i_did="Replace with specifics: mesh strategy, boundary conditions/loads, material models, and solver settings.",
@@ -217,9 +219,9 @@ PROJECTS = [
     ),
     dict(
         slug="fea-midterm-project", category="projects", org="Finite Element Analysis", title="FEA Midterm Project",
-        dates="Placeholder course/semester", location="University of Illinois",
+        dates="Placeholder dates", location="University of Illinois",
         lede="Placeholder one-sentence summary of the analysis performed.",
-        overview="Replace with the problem statement and scope of the midterm assignment.",
+        overview="Replace with the problem statement and scope of the project.",
         what_i_did="Replace with specifics: mesh strategy, boundary conditions/loads, material models, and solver settings.",
         tools_prose="Replace with the specific FEA software and methods used.",
         outcome="Replace with the result and what it showed.",
@@ -228,7 +230,7 @@ PROJECTS = [
     ),
     dict(
         slug="ae353-final-project", category="projects", org="AE 353 — Aerospace Control Systems", title="AE 353 Final Project",
-        dates="Placeholder course/semester", location="University of Illinois",
+        dates="Placeholder dates", location="University of Illinois",
         lede="Placeholder one-sentence summary of the dynamic system modeled and controlled.",
         overview="Replace with the problem statement: the system's dynamics and the control objective.",
         what_i_did="Replace with specifics: the controller designed (e.g. state feedback, LQR), simulation setup, and tuning process.",
@@ -239,7 +241,7 @@ PROJECTS = [
     ),
     dict(
         slug="ae353-project-2", category="projects", org="AE 353 — Aerospace Control Systems", title="AE 353 Project 2",
-        dates="Placeholder course/semester", location="University of Illinois",
+        dates="Placeholder dates", location="University of Illinois",
         lede="Placeholder one-sentence summary of the system modeled and controlled.",
         overview="Replace with the problem statement: the system's dynamics and the control objective.",
         what_i_did="Replace with specifics: the controller designed, simulation setup, and tuning process.",
@@ -250,7 +252,7 @@ PROJECTS = [
     ),
     dict(
         slug="ae370-final-project", category="projects", org="AE 370 — Numerical Methods", title="AE 370 Final Project",
-        dates="Placeholder course/semester", location="University of Illinois",
+        dates="Placeholder dates", location="University of Illinois",
         lede="Placeholder one-sentence summary of the numerical method implemented and the problem it solved.",
         overview="Replace with the problem statement and why a numerical approach was needed.",
         what_i_did="Replace with specifics: the numerical scheme implemented, discretization, verification/validation approach.",
@@ -293,6 +295,10 @@ def render_group(items, out_dir):
             f'<li><a href="{href}" target="_blank" rel="noopener">{label} &rarr;</a></li>'
             for label, href in item["links"]
         )
+        note_html = (
+            f'<p class="text-muted reveal" style="font-size:0.92rem;font-style:italic;margin-top:0.6rem;max-width:700px;">{item["note"]}</p>'
+            if item.get("note") else ""
+        )
         html = TEMPLATE.format(
             title=item["title"],
             org=item["org"],
@@ -305,6 +311,8 @@ def render_group(items, out_dir):
             what_i_did=item["what_i_did"],
             tools_prose=item["tools_prose"],
             outcome=item["outcome"],
+            p_class="" if item.get("filled") else ' class="placeholder"',
+            note_html=note_html,
             tag_html=tag_html,
             links_html=links_html,
             section_id=cat["id"],
