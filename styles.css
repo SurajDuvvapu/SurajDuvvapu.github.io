@@ -459,6 +459,87 @@ section.tight { padding: 4rem 0; }
   }
 }
 
+/* ---------- Inline report figures (images placed inline within prose,
+   near the paragraph they illustrate, rather than in one gallery) ---------- */
+
+.prose figure.report-figure {
+  margin: 0.4rem 0 2.2rem;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.prose figure.report-figure .figure-media {
+  display: grid;
+  grid-template-columns: 1fr;
+  background: #fff;
+}
+
+.prose figure.report-figure.figure-pair .figure-media { grid-template-columns: 1fr 1fr; }
+.prose figure.report-figure.figure-triple .figure-media { grid-template-columns: repeat(3, 1fr); }
+
+.prose figure.report-figure .figure-media > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.prose figure.report-figure .figure-media > div + div {
+  border-left: 1px solid var(--border);
+}
+
+.prose figure.report-figure img {
+  width: 100%;
+  display: block;
+}
+
+.prose figure.report-figure .figure-media svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  padding: 1.5rem;
+}
+
+.prose figure.report-figure .figure-sublabel {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 0.5rem 0.6rem 0;
+  background: #fff;
+}
+
+.prose figure.report-figure .figure-placeholder {
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-style: italic;
+  text-align: center;
+  padding: 1.25rem;
+  background: #fff;
+}
+
+.prose figure.report-figure figcaption {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 640px) {
+  .prose figure.report-figure.figure-pair .figure-media,
+  .prose figure.report-figure.figure-triple .figure-media {
+    grid-template-columns: 1fr;
+  }
+  .prose figure.report-figure .figure-media > div + div {
+    border-left: none;
+    border-top: 1px solid var(--border);
+  }
+}
+
 .detail-grid {
   display: grid;
   grid-template-columns: 2fr 1fr;

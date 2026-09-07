@@ -155,6 +155,82 @@ def media_gallery_html(images):
     )
     return f'<div class="media-gallery reveal">\n    {figures}\n  </div>'
 
+
+def report_figure(items, caption):
+    """Builds one inline report-style figure to drop directly inside a prose
+    field (overview/what_i_did/etc.), so images can sit right next to the
+    paragraph they illustrate instead of being dumped in one gallery at the
+    top of the page.
+
+    `items` is a list of 1-3 (src, sublabel) tuples, one per image cell
+    (e.g. a Python-vs-Abaqus comparison is 2 items). `src` is relative to
+    the experience/ or projects/ folder, e.g. "../assets/foo/bar.png"; pass
+    src=None to render a placeholder box (with `sublabel` as the note of
+    what image belongs there) until the real image is ready to drop in, or
+    a raw "<svg ...>...</svg>" string to embed a hand-drawn diagram inline
+    instead of an <img> (used when the report figure was vector-drawn, e.g.
+    a TikZ sketch, and has no source image file to link to).
+    `caption` is the figure caption shown below the image(s).
+    """
+    cells = []
+    for src, sublabel in items:
+        if src and src.lstrip().startswith("<svg"):
+            img = src
+            sub = f'<div class="figure-sublabel">{sublabel}</div>' if sublabel else ""
+        elif src:
+            img = f'<img src="{src}" alt="{sublabel or caption}" loading="lazy" />'
+            sub = f'<div class="figure-sublabel">{sublabel}</div>' if sublabel else ""
+        else:
+            img = f'<div class="figure-placeholder">{sublabel or "Add image here"}</div>'
+            sub = ""
+        cells.append(f'<div>{img}{sub}</div>')
+    variant = {2: " figure-pair", 3: " figure-triple"}.get(len(items), "")
+    media = "".join(cells)
+    return (
+        f'<figure class="report-figure{variant}">\n'
+        f'      <div class="figure-media">{media}</div>\n'
+        f'      <figcaption>{caption}</figcaption>\n'
+        f'    </figure>'
+    )
+
+
+# Hand-drawn recreation of the custom arched-plate boundary-condition sketch
+# from the FEA report (originally a LaTeX/TikZ figure, so there's no source
+# image file for it). Faithful to the report's geometry: 0.50m wide, 0.30m
+# base height, curved top rising to 0.40m at the center.
+ARCH_SKETCH_SVG = """<svg viewBox="0 0 660 480" role="img" aria-labelledby="archSketchTitle" font-family="-apple-system, 'Helvetica Neue', Arial, sans-serif">
+        <title id="archSketchTitle">Custom arched-plate heat transfer problem: geometry and boundary conditions</title>
+        <defs>
+          <marker id="archArrowRed" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#d1453b"/></marker>
+          <marker id="archArrowPurple" markerWidth="8" markerHeight="8" refX="4" refY="6" orient="auto"><path d="M0,0 L8,0 L4,8 Z" fill="#8452d5"/></marker>
+          <marker id="archArrowGray" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#6e6e73"/></marker>
+        </defs>
+        <path d="M210,380 L560,380 L560,170 C476,100 294,100 210,170 Z" fill="none" stroke="#1d1d1f" stroke-width="2.5"/>
+        <g stroke="#d1453b" stroke-width="2.2">
+          <line x1="161" y1="338" x2="202" y2="338" marker-end="url(#archArrowRed)"/>
+          <line x1="161" y1="296" x2="202" y2="296" marker-end="url(#archArrowRed)"/>
+          <line x1="161" y1="254" x2="202" y2="254" marker-end="url(#archArrowRed)"/>
+          <line x1="161" y1="212" x2="202" y2="212" marker-end="url(#archArrowRed)"/>
+        </g>
+        <text x="153" y="279" fill="#d1453b" font-size="19" text-anchor="end">q<tspan font-size="13" dy="-6">p</tspan><tspan dy="6"> = 6000 W/m&sup2;</tspan></text>
+        <line x1="560" y1="170" x2="560" y2="380" stroke="#0071e3" stroke-width="5"/>
+        <text x="572" y="279" fill="#0071e3" font-size="19" text-anchor="start">T = 75&deg;C</text>
+        <g stroke="#8452d5" stroke-width="2.2">
+          <line x1="280" y1="107" x2="280" y2="120" marker-end="url(#archArrowPurple)"/>
+          <line x1="350" y1="86" x2="350" y2="99" marker-end="url(#archArrowPurple)"/>
+          <line x1="420" y1="86" x2="420" y2="99" marker-end="url(#archArrowPurple)"/>
+          <line x1="490" y1="107" x2="490" y2="120" marker-end="url(#archArrowPurple)"/>
+        </g>
+        <text x="385" y="55" fill="#8452d5" font-size="19" text-anchor="middle">h = 12, T&#8734; = 25&deg;C</text>
+        <text x="385" y="415" fill="#4a4a4f" font-size="18" text-anchor="middle">Insulated bottom edge</text>
+        <g stroke="#6e6e73" stroke-width="1.8">
+          <line x1="105" y1="436" x2="157" y2="436" marker-end="url(#archArrowGray)"/>
+          <line x1="105" y1="436" x2="105" y2="384" marker-end="url(#archArrowGray)"/>
+        </g>
+        <text x="167" y="441" fill="#6e6e73" font-size="16">x</text>
+        <text x="98" y="374" fill="#6e6e73" font-size="16" text-anchor="end">y</text>
+      </svg>"""
+
 EXPERIENCE = [
     dict(
         slug="tesla", category="work", org="Tesla", title="Mechanical Design Engineering Intern",
@@ -253,14 +329,48 @@ EXPERIENCE = [
 
 PROJECTS = [
     dict(
-        slug="fea-final-project", category="projects", org="Finite Element Analysis", title="FEA Final Project",
-        dates="Placeholder dates", location="University of Illinois",
-        lede="Placeholder one-sentence summary of the structure/component analyzed and the goal of the project.",
-        overview="Replace with the problem statement: what structure or component you modeled, and what question the analysis needed to answer.",
-        what_i_did="Replace with specifics: mesh strategy, boundary conditions/loads, material models, and solver settings.",
-        tools_prose="Replace with the specific FEA software used (e.g. ANSYS, Abaqus) and any scripting/automation.",
-        outcome="Replace with the result: stresses/deflections found, design changes recommended, validation against hand calcs or test data.",
-        tags=["FEA", "Structural Analysis"],
+        slug="fea-final-project", category="projects", org="Finite Element Analysis", title="2D Thermal Finite Element Solver",
+        filled=True,
+        dates="Spring 2026", location="University of Illinois",
+        lede="Built a 2D finite element solver in Python for steady-state and transient heat conduction, verified against Abaqus on both provided test cases and a custom problem built from scratch.",
+        overview="This project turned a finite element solver I&rsquo;d built earlier in the semester for structural problems into a full two-dimensional thermal analysis tool, covering both steady-state and transient heat conduction. The question driving it was how much of a general FEA framework, equation numbering, assembly, and a partitioned solve, carries over to a completely different physical problem once the right element-level physics and boundary conditions are swapped in. I verified the solver at every stage against Abaqus, including on a thermal problem and mesh I designed myself rather than one that was handed to me.",
+        what_i_did=(
+            "The reused core of the solver was the FEA infrastructure: equation numbering, the location matrix, partitioned global assembly, and the partitioned solve. On top of that I built the physics for a steady-state thermal problem, (K<sub>k</sub> + K<sub>c</sub>)T = P<sub>Q</sub> + P<sub>q</sub> + P<sub>c</sub>, using the same isoparametric Q4 shape functions, Jacobian, and Gauss quadrature routines from the structural code, but swapping the strain-displacement matrix for a temperature-gradient matrix to form the conduction matrix. The genuinely new part was the boundary conditions: an edge-based applied heat flux, integrated as &int; N<sup>T</sup>q<sup>p</sup>t d&Gamma; over the loaded edge with one-dimensional Gauss quadrature, and edge-based convection, which needed both a convection matrix (row-sum lumped, per the project&rsquo;s requirements) and a convection load vector.</p>\n      "
+            "<p>I validated the steady-state solver against Abaqus on four meshes, coarse and fine rectangles, a distorted rectangular mesh, and a mesh with a circular hole cut into it, comparing temperature contours side by side. All four matched Abaqus closely, including the distorted and curved-hole cases, confirming that the isoparametric mapping and edge integration were working correctly on non-rectangular elements and not just the easy rectangular ones.</p>\n      "
+            + report_figure(
+                [
+                    ("../assets/fea-final-project/steady-state-hole-python.png", "Python solution"),
+                    ("../assets/fea-final-project/steady-state-hole-abaqus.png", "Abaqus solution"),
+                ],
+                "Temperature contours for the fine mesh with a circular hole: the Python solver (left) versus Abaqus (right). The two match closely, confirming the isoparametric mapping and edge-integration routines handle curved, non-rectangular elements correctly.",
+            )
+            + "\n      <p>I also used the solver to compute heat flux across an internal edge shared by two elements, evaluated once from each element. The two values didn&rsquo;t match exactly, and that&rsquo;s expected: the temperature field is continuous across element boundaries, but its gradient (and therefore the heat flux, since q = &minus;k&nabla;T) generally isn&rsquo;t. It&rsquo;s a good illustration of a real FEA post-processing subtlety rather than a bug, and the mismatch would shrink under mesh refinement.</p>\n      "
+            "<p>To test the solver on something it hadn&rsquo;t seen, I built an entirely new steady-state problem from scratch in Abaqus CAE: an arched plate with a curved top edge, a fixed heat flux on the left edge, a fixed temperature on the right edge, a convection boundary on the curved top, and an insulated bottom, meshed with more than 100 distorted DC2D4 elements. My Python solver matched the Abaqus result closely here too, which was the real test of whether the implementation generalized past the given test cases.</p>\n      "
+            + report_figure(
+                [(ARCH_SKETCH_SVG, None)],
+                "The custom arched heat-transfer problem, built from scratch in Abaqus CAE: a fixed heat flux on the left edge, a fixed temperature on the right edge, convection on the curved top edge, and an insulated bottom edge.",
+            )
+            + report_figure(
+                [
+                    ("../assets/fea-final-project/custom-arch-python.png", "Python solution"),
+                    ("../assets/fea-final-project/custom-arch-abaqus.png", "Abaqus solution"),
+                ],
+                "Temperature contours for the custom arched-plate problem: Python (left) versus Abaqus (right). The two solutions agree closely, including the curved contour bands near the convection boundary at the top.",
+            )
+            + "\n      <p>The last extension was time: I added a row-sum lumped capacitance matrix and implemented two time-integration schemes, explicit Forward Euler and implicit Crank-Nicolson, to solve the transient version of the same system. For Forward Euler I computed the critical time step from the largest eigenvalue of the system matrix and deliberately ran the solver at 0.1, 0.9, and 1.1 times that critical step to show its conditional stability directly: the first two settle smoothly toward steady state, and the 1.1&times; case visibly oscillates and diverges, exactly as the stability theory predicts. Crank-Nicolson, run at time steps well beyond Forward Euler&rsquo;s stability limit, stayed stable in every case, though accuracy visibly degraded into oscillation as the time step grew.</p>\n      "
+            + report_figure(
+                [
+                    ("../assets/fea-final-project/forward-euler-0p1-dtcr.png", "0.1 Δtᴄᵣ — stable"),
+                    ("../assets/fea-final-project/forward-euler-0p9-dtcr.png", "0.9 Δtᴄᵣ — stable"),
+                    ("../assets/fea-final-project/forward-euler-1p1-dtcr-unstable.png", "1.1 Δtᴄᵣ — unstable"),
+                ],
+                "Forward Euler temperature histories at increasing fractions of the critical time step, for two nodes in the coarse rectangular mesh. Below the critical step the solution is smooth and converges; above it (1.1 &Delta;t_cr) the response visibly oscillates and diverges, exactly the conditional-stability behavior the theory predicts.",
+            )
+            + "\n      <p>I ran both schemes across two different mesh cases and tracked nodal temperature histories over time as each domain heated from a uniform initial temperature toward its steady-state distribution, covering the full arc from a static conduction solve to a stable, well-behaved transient one."
+        ),
+        tools_prose="Wrote the full solver, equation numbering, assembly, boundary conditions, and both time-integration schemes, from scratch in Python with NumPy, building on a structural FEA codebase from earlier in the course. Used Abaqus CAE and Abaqus/Standard, including DC2D4 thermal elements, to build the custom validation geometry and mesh and to independently solve every case for comparison. Used Matplotlib for all temperature contour and transient time-history plots.",
+        outcome="Ended up with a working 2D thermal FEA solver that matched Abaqus temperature fields closely across five independent geometries, four given and one designed from scratch, and that correctly reproduced the textbook stability behavior of Forward Euler and Crank-Nicolson time integration, including inducing and confirming numerical instability once the Forward Euler critical time step was exceeded.",
+        tags=["Python", "NumPy", "Finite Element Method", "Abaqus", "Heat Transfer", "Numerical Methods"],
         links=[("Report / code", "#")],
     ),
     dict(
