@@ -333,6 +333,17 @@ PROJECTS = [
         filled=True,
         dates="Spring 2026", location="University of Illinois",
         lede="Built a 2D finite element solver in Python for steady-state and transient heat conduction, verified against Abaqus on both provided test cases and a custom problem built from scratch.",
+        media=[
+            ("../assets/fea-final-project/custom-arch-python.png",
+             "Temperature contour plot of the custom arched-plate problem, solved with the Python FEA solver",
+             "The custom arched-plate problem, the project&rsquo;s centerpiece result: a geometry designed from scratch and solved entirely with my own code."),
+            ("../assets/fea-final-project/steady-state-hole-python.png",
+             "Temperature contour plot of the fine rectangular mesh with a circular hole, solved with the Python FEA solver",
+             "Steady-state validation on a curved, non-rectangular mesh &mdash; one of four provided test cases matched against Abaqus."),
+            ("../assets/fea-final-project/forward-euler-1p1-dtcr-unstable.png",
+             "Forward Euler temperature history plot showing numerical instability once the critical time step is exceeded",
+             "The transient solver deliberately pushed past stability: Forward Euler oscillating and diverging once the time step exceeds &Delta;t_cr."),
+        ],
         overview="This project turned a finite element solver I&rsquo;d built earlier in the semester for structural problems into a full two-dimensional thermal analysis tool, covering both steady-state and transient heat conduction. The question driving it was how much of a general FEA framework, equation numbering, assembly, and a partitioned solve, carries over to a completely different physical problem once the right element-level physics and boundary conditions are swapped in. I verified the solver at every stage against Abaqus, including on a thermal problem and mesh I designed myself rather than one that was handed to me.",
         what_i_did=(
             "The reused core of the solver was the FEA infrastructure: equation numbering, the location matrix, partitioned global assembly, and the partitioned solve. On top of that I built the physics for a steady-state thermal problem, (K<sub>k</sub> + K<sub>c</sub>)T = P<sub>Q</sub> + P<sub>q</sub> + P<sub>c</sub>, using the same isoparametric Q4 shape functions, Jacobian, and Gauss quadrature routines from the structural code, but swapping the strain-displacement matrix for a temperature-gradient matrix to form the conduction matrix. The genuinely new part was the boundary conditions: an edge-based applied heat flux, integrated as &int; N<sup>T</sup>q<sup>p</sup>t d&Gamma; over the loaded edge with one-dimensional Gauss quadrature, and edge-based convection, which needed both a convection matrix (row-sum lumped, per the project&rsquo;s requirements) and a convection load vector.</p>\n      "
@@ -374,14 +385,110 @@ PROJECTS = [
         links=[("Report / code", "#")],
     ),
     dict(
-        slug="fea-midterm-project", category="projects", org="Finite Element Analysis", title="FEA Midterm Project",
-        dates="Placeholder dates", location="University of Illinois",
-        lede="Placeholder one-sentence summary of the analysis performed.",
-        overview="Replace with the problem statement and scope of the project.",
-        what_i_did="Replace with specifics: mesh strategy, boundary conditions/loads, material models, and solver settings.",
-        tools_prose="Replace with the specific FEA software and methods used.",
-        outcome="Replace with the result and what it showed.",
-        tags=["FEA", "Structural Analysis"],
+        slug="fea-midterm-project", category="projects", org="Finite Element Analysis", title="Stress Concentration and Plane-Stress Validity Study",
+        filled=True,
+        dates="Spring 2026", location="University of Illinois",
+        lede="Benchmarked FEA stress concentration around a circular hole against classical elasticity theory in Abaqus, then pushed the model through a finite-width parametric study and a 3D extension to find exactly where the plane-stress assumption stops holding.",
+        media=[
+            ("../assets/fea-midterm-project/s11-near-hole-finite-width.png",
+             "S11 stress contour zoomed near the hole for the finite-width plate model",
+             "Peak tensile stress concentration at the top of the hole in the finite-width model &mdash; the result the whole parametric study builds on."),
+            ("../assets/fea-midterm-project/s33-3d-thick-plate-t400.png",
+             "S33 out-of-plane stress contour for the thickest 3D plate model",
+             "Out-of-plane stress in the 400&nbsp;mm-thick 3D model &mdash; the clearest visual evidence that plane stress no longer holds."),
+            ("../assets/fea-midterm-project/stress-concentration-factor-comparison.png",
+             "Plot comparing FEA-computed stress concentration factors to the reference curve across four plate widths",
+             "FEA-computed stress concentration factors against the reference curve, within 2% across all four widths tested."),
+        ],
+        overview="This project worked through the classic problem of stress concentration around a circular hole in a loaded plate, building up in stages from a clean, idealized case to a fully three-dimensional one. I started with the textbook infinite-plate solution as a benchmark, verified it with a 2D finite element model, then deliberately narrowed the plate until the finite-width effects that theory ignores became significant, tracked how the stress concentration factor changed as a result, and finally extended the model into three dimensions to find out at what thickness the plane-stress assumption underlying the whole analysis actually stops being valid.",
+        what_i_did=(
+            "The first model was a quarter-symmetry Abaqus plate, 100&nbsp;mm &times; 100&nbsp;mm, with a 10&nbsp;mm hole radius and a uniform 1&nbsp;MPa tensile traction applied along the loaded edge, meant to approximate an infinite plate with a small hole in it. I used linear elastic, isotropic material properties (E&nbsp;=&nbsp;210,000&nbsp;MPa, &nu;&nbsp;=&nbsp;0.30), 2D plane-stress quadratic quadrilateral elements (CPS8), and a free mesh refined near the hole, where the stress gradients are steepest, and coarsened toward the far field to keep the model economical.</p>\n      "
+            + report_figure(
+                [("../assets/fea-midterm-project/mesh-quarter-symmetry.png", None)],
+                "Quarter-symmetry mesh for the infinite-plate benchmark model, refined near the hole where stress gradients are steepest.",
+            )
+            + "\n      <p>Pulling the S11 and S22 stress contours confirmed the concentration builds exactly where theory predicts: a tensile peak near the top of the hole reaching roughly 3&sigma;, and a corresponding compressive region near the side of the hole in S22. Because that peak is a real physical feature of the solution rather than a meshing artifact, I set the contour limits to preserve it rather than clip it.</p>\n      "
+            + report_figure(
+                [
+                    ("../assets/fea-midterm-project/s11-whole-domain-infinite-plate.png", "Whole domain"),
+                    ("../assets/fea-midterm-project/s11-near-hole-infinite-plate.png", "Near-hole detail"),
+                ],
+                "S11 contours for the infinite-plate benchmark model: the tensile stress concentration peaks near the top of the hole, close to the theoretical 3&sigma; value.",
+            )
+            + report_figure(
+                [
+                    ("../assets/fea-midterm-project/s22-whole-domain-infinite-plate.png", "Whole domain"),
+                    ("../assets/fea-midterm-project/s22-near-hole-infinite-plate.png", "Near-hole detail"),
+                ],
+                "S22 contours for the same model, showing the complementary compressive region near the side of the hole.",
+            )
+            + "\n      <p>To check the model quantitatively rather than just by eye, I extracted stress along two symmetry-edge paths, converted path distance to radial distance, and compared the result directly against the closed-form tangential stress solution &sigma;<sub>&theta;</sub> = (&sigma;/2)[1 + a&sup2;/r&sup2; &minus; (1 + 3a&#8308;/r&#8308;)cos&nbsp;2&theta;]. Along the y-axis (&theta;&nbsp;=&nbsp;90&deg;) the FEA curve approached the theoretical 3&sigma; peak at the hole boundary and decayed toward the far-field &sigma; as expected; along the x-axis (&theta;&nbsp;=&nbsp;0&deg;) it approached the theoretical &minus;&sigma; and recovered toward zero moving away from the hole. The agreement across both paths was close enough to confirm the quarter-symmetry model, boundary conditions, and mesh density were all doing their job before I started changing the geometry.</p>\n      "
+            + report_figure(
+                [
+                    ("../assets/fea-midterm-project/theta-comparison-xaxis-infinite-plate.png", "Along x-axis (&theta; = 0&deg;)"),
+                    ("../assets/fea-midterm-project/theta-comparison-yaxis-infinite-plate.png", "Along y-axis (&theta; = 90&deg;)"),
+                ],
+                "Abaqus path results versus the closed-form &sigma;<sub>&theta;</sub> solution &mdash; close agreement on both axes confirms the benchmark model.",
+            )
+            + "\n      <p>With the infinite-plate case validated, I intentionally broke the assumption it depends on: I narrowed the plate so the hole took up half its width (2a/w&nbsp;=&nbsp;0.5, with w&nbsp;=&nbsp;20&nbsp;mm), keeping the same material, boundary conditions, and mesh refinement strategy. Forcing the same load through a smaller net cross-section produced a noticeably larger stress concentration than the infinite-plate case, exactly as expected.</p>\n      "
+            + report_figure(
+                [
+                    ("../assets/fea-midterm-project/s11-whole-domain-finite-width.png", "Whole domain"),
+                    ("../assets/fea-midterm-project/s11-near-hole-finite-width.png", "Near-hole detail"),
+                ],
+                "S11 contours for the finite-width plate (2a/w = 0.5): the peak tensile stress near the hole is visibly higher than in the infinite-plate case.",
+            )
+            + "\n      <p>Repeating the same path-based comparison against the infinite-plate formula made the finite-width effect explicit: along the y-axis the Abaqus peak stress at the hole boundary now exceeded the theoretical 3&sigma; limit, and along the x-axis the compressive stress at the boundary was stronger than the analytical prediction, with a more pronounced overshoot before settling toward the far-field value. That's not a modeling error &mdash; it's exactly what should happen once the plate no longer satisfies the assumptions the infinite-plate formula was derived under.</p>\n      "
+            + report_figure(
+                [
+                    ("../assets/fea-midterm-project/theta-comparison-xaxis-finite-width.png", "Along x-axis (&theta; = 0&deg;)"),
+                    ("../assets/fea-midterm-project/theta-comparison-yaxis-finite-width.png", "Along y-axis (&theta; = 90&deg;)"),
+                ],
+                "The finite-width model diverges from the infinite-plate theory on both axes &mdash; expected, since the assumptions behind that formula no longer hold.",
+            )
+            + "\n      <p>That raised an obvious follow-up: how does the stress concentration factor actually trend as the plate gets wider and the finite-width effect fades? I built four more models at a fixed hole size (2a&nbsp;=&nbsp;20&nbsp;mm) but increasing widths &mdash; w&nbsp;=&nbsp;40, 50, 60, and 70&nbsp;mm (2a/w from 0.5 down to about 0.286) &mdash; pulled the peak S11 stress from each, and computed K<sub>t</sub>&nbsp;=&nbsp;&sigma;<sub>max</sub>/&sigma;<sub>nom</sub> against the nominal net-section stress &sigma;<sub>nom</sub>&nbsp;=&nbsp;&sigma;(w/(w&minus;2a)). All four FEA-computed K<sub>t</sub> values landed within 2% of a published reference curve fit, and both the FEA points and the reference curve moved the same direction: K<sub>t</sub> climbing back toward the infinite-plate limit of 3 as the width-to-hole ratio grew.</p>\n      "
+            + report_figure(
+                [
+                    ("../assets/fea-midterm-project/s11-near-hole-w50.png", "w = 50 mm"),
+                    ("../assets/fea-midterm-project/s11-near-hole-w60.png", "w = 60 mm"),
+                    ("../assets/fea-midterm-project/s11-near-hole-w70.png", "w = 70 mm"),
+                ],
+                "S11 concentration near the hole across three of the four widths tested, all plotted on the same contour scale &mdash; the peak visibly relaxes as the plate widens.",
+            )
+            + report_figure(
+                [("../assets/fea-midterm-project/stress-concentration-factor-comparison.png", None)],
+                "FEA-computed stress concentration factors across all four widths, within 2% of the reference curve fit at every point.",
+            )
+            + "\n      <p>The last stage tested the assumption sitting underneath everything up to that point: plane stress. I took the w&nbsp;=&nbsp;40&nbsp;mm finite-width geometry from earlier and extended it into a full 3D, eighth-symmetry solid model at three thicknesses &mdash; t&nbsp;=&nbsp;4, 40, and 400&nbsp;mm (0.1w, 1.0w, and 10.0w) &mdash; using quadratic 3D brick elements, the same material properties and loading, and symmetry conditions on all three coordinate planes. The in-plane S11 stress concentration stayed anchored at the same geometric location, near the top of the hole, across all three thicknesses, which was reassuring on its own: the basic in-plane behavior doesn't change just because the plate gets thicker.</p>\n      "
+            + report_figure(
+                [
+                    ("../assets/fea-midterm-project/s11-3d-thin-plate-t4.png", "t = 4 mm"),
+                    ("../assets/fea-midterm-project/s11-3d-medium-plate-t40.png", "t = 40 mm"),
+                    ("../assets/fea-midterm-project/s11-3d-thick-plate-t400.png", "t = 400 mm"),
+                ],
+                "S11 contours for the three 3D thickness models &mdash; the in-plane concentration holds its location and shape as thickness increases.",
+            )
+            + "\n      <p>The real story was in S33, the out-of-plane normal stress a true plane-stress model assumes is zero everywhere. For the thin plate (t&nbsp;=&nbsp;4&nbsp;mm) it stayed small, around 0.09&nbsp;MPa at the interior mid-plane and decaying to about 0.06&nbsp;MPa at the free surface &mdash; only on the order of 1&ndash;2% of the roughly 4.5&nbsp;MPa peak in-plane stress. For the medium plate (t&nbsp;=&nbsp;40&nbsp;mm) it jumped to about 0.95&nbsp;MPa at the mid-plane, more than 20% of the peak in-plane stress, and for the thick plate (t&nbsp;=&nbsp;400&nbsp;mm) it stayed near 1.0&nbsp;MPa through most of the interior before dropping off close to the free surface. Visually, the thick model's S33 field wasn't confined to a small region near the hole the way plane-stress theory would suggest &mdash; it persisted through most of the interior, which is the clearest sign the model had left plane stress behind.</p>\n      "
+            + report_figure(
+                [
+                    ("../assets/fea-midterm-project/s33-3d-thin-plate-t4.png", "t = 4 mm"),
+                    ("../assets/fea-midterm-project/s33-3d-medium-plate-t40.png", "t = 40 mm"),
+                    ("../assets/fea-midterm-project/s33-3d-thick-plate-t400.png", "t = 400 mm"),
+                ],
+                "S33 (out-of-plane) contours across the same three thicknesses. A true plane-stress state would show zero everywhere &mdash; instead, S33 grows substantially with thickness.",
+            )
+            + report_figure(
+                [
+                    ("../assets/fea-midterm-project/through-thickness-s33-thin-t4.png", "t = 4 mm"),
+                    ("../assets/fea-midterm-project/through-thickness-s33-thick-t400.png", "t = 400 mm"),
+                ],
+                "S33 through the plate thickness at the point of peak concentration, thin versus thick: the thin plate relaxes toward zero as theory predicts, while the thick plate stays elevated through nearly the whole interior.",
+            )
+            + "\n      <p>Taken together, the four stages traced a clear line from theory to its limits: the infinite-plate solution held up well under the quarter-symmetry benchmark, narrowing the plate produced exactly the departure from that theory the finite-width behavior predicts, the K<sub>t</sub> parametric sweep matched the reference curve to within 2% across four widths, and the 3D extension pinned down concretely where plane stress breaks down &mdash; solid at t&nbsp;=&nbsp;4&nbsp;mm, questionable by t&nbsp;=&nbsp;40&nbsp;mm, and clearly invalid by t&nbsp;=&nbsp;400&nbsp;mm."
+        ),
+        tools_prose="Built and solved every model in Abaqus/CAE and Abaqus/Standard: CPS8 quadratic plane-stress elements for the 2D quarter-symmetry models, and quadratic 3D brick elements for the eighth-symmetry solid models. Used Abaqus path tools to extract stress along symmetry-edge and through-thickness paths, and Matplotlib for all theory-comparison and stress-concentration-factor plots.",
+        outcome="Came out of it with a 2D stress-concentration model that matched the infinite-plate theory closely, a finite-width correction that tracked a published curve fit to within 2% across four plate widths, and a concrete, thickness-based answer to when plane stress is (and isn't) a valid assumption: solid at t&nbsp;=&nbsp;4&nbsp;mm, questionable by t&nbsp;=&nbsp;40&nbsp;mm, and clearly invalid by t&nbsp;=&nbsp;400&nbsp;mm, where out-of-plane stress remained near 1&nbsp;MPa through most of the plate's interior.",
+        tags=["Abaqus", "Finite Element Method", "Stress Analysis", "Structural Mechanics", "3D Modeling"],
         links=[("Report / code", "#")],
     ),
     dict(

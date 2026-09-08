@@ -44,8 +44,25 @@
 </header>
 
 <div class="container">
-  <div class="media-frame reveal">
-    Add a photo, render, CAD screenshot, or diagram here. Replace this placeholder frame in fea-final-project.html.
+  <div class="media-gallery reveal">
+    <figure>
+      <div class="media-thumb">
+        <img src="../assets/fea-final-project/custom-arch-python.png" alt="Temperature contour plot of the custom arched-plate problem, solved with the Python FEA solver" loading="lazy" />
+      </div>
+      <figcaption>The custom arched-plate problem, the project&rsquo;s centerpiece result: a geometry designed from scratch and solved entirely with my own code.</figcaption>
+    </figure>
+    <figure>
+      <div class="media-thumb">
+        <img src="../assets/fea-final-project/steady-state-hole-python.png" alt="Temperature contour plot of the fine rectangular mesh with a circular hole, solved with the Python FEA solver" loading="lazy" />
+      </div>
+      <figcaption>Steady-state validation on a curved, non-rectangular mesh &mdash; one of four provided test cases matched against Abaqus.</figcaption>
+    </figure>
+    <figure>
+      <div class="media-thumb">
+        <img src="../assets/fea-final-project/forward-euler-1p1-dtcr-unstable.png" alt="Forward Euler temperature history plot showing numerical instability once the critical time step is exceeded" loading="lazy" />
+      </div>
+      <figcaption>The transient solver deliberately pushed past stability: Forward Euler oscillating and diverging once the time step exceeds &Delta;t_cr.</figcaption>
+    </figure>
   </div>
 
   <div class="detail-grid">
