@@ -329,7 +329,7 @@ EXPERIENCE = [
 
 PROJECTS = [
     dict(
-        slug="fea-final-project", category="projects", org="Finite Element Analysis", title="2D Thermal Finite Element Solver",
+        slug="2d-thermal-finite-element-solver", category="projects", org="Finite Element Analysis", title="2D Thermal Finite Element Solver",
         filled=True,
         dates="Spring 2026", location="University of Illinois",
         lede="Built a 2D finite element solver in Python for steady-state and transient heat conduction, verified against Abaqus on both provided test cases and a custom problem built from scratch.",
@@ -385,7 +385,7 @@ PROJECTS = [
         links=[("Report / code", "#")],
     ),
     dict(
-        slug="fea-midterm-project", category="projects", org="Finite Element Analysis", title="Stress Concentration and Plane-Stress Validity Study",
+        slug="stress-concentration-and-plane-stress-validity-study", category="projects", org="Finite Element Analysis", title="Stress Concentration and Plane-Stress Validity Study",
         filled=True,
         dates="Spring 2026", location="University of Illinois",
         lede="Benchmarked FEA stress concentration around a circular hole against classical elasticity theory in Abaqus, then pushed the model through a finite-width parametric study and a 3D extension to find exactly where the plane-stress assumption stops holding.",
