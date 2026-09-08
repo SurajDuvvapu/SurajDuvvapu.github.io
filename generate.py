@@ -68,7 +68,7 @@ TEMPLATE = """<!doctype html>
   {media_html}
 
   <div class="detail-grid">
-    <article class="prose reveal">
+    <article class="prose">
       <h2>Overview</h2>
       <p{p_class}>{overview}</p>
 
