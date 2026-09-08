@@ -87,10 +87,7 @@ TEMPLATE = """<!doctype html>
       <div class="tag-list">
         {tag_html}
       </div>
-      <h3>Links</h3>
-      <ul class="sidebar-links">
-        {links_html}
-      </ul>
+      {links_section_html}
     </aside>
   </div>
 
@@ -382,7 +379,7 @@ PROJECTS = [
         tools_prose="Wrote the full solver, equation numbering, assembly, boundary conditions, and both time-integration schemes, from scratch in Python with NumPy, building on a structural FEA codebase from earlier in the course. Used Abaqus CAE and Abaqus/Standard, including DC2D4 thermal elements, to build the custom validation geometry and mesh and to independently solve every case for comparison. Used Matplotlib for all temperature contour and transient time-history plots.",
         outcome="Ended up with a working 2D thermal FEA solver that matched Abaqus temperature fields closely across five independent geometries, four given and one designed from scratch, and that correctly reproduced the textbook stability behavior of Forward Euler and Crank-Nicolson time integration, including inducing and confirming numerical instability once the Forward Euler critical time step was exceeded.",
         tags=["Python", "NumPy", "Finite Element Method", "Abaqus", "Heat Transfer", "Numerical Methods"],
-        links=[("Report / code", "#")],
+        links=[],
     ),
     dict(
         slug="stress-concentration-and-plane-stress-validity-study", category="projects", org="Finite Element Analysis", title="Stress Concentration and Plane-Stress Validity Study",
@@ -489,7 +486,7 @@ PROJECTS = [
         tools_prose="Built and solved every model in Abaqus/CAE and Abaqus/Standard: CPS8 quadratic plane-stress elements for the 2D quarter-symmetry models, and quadratic 3D brick elements for the eighth-symmetry solid models. Used Abaqus path tools to extract stress along symmetry-edge and through-thickness paths, and Matplotlib for all theory-comparison and stress-concentration-factor plots.",
         outcome="Came out of it with a 2D stress-concentration model that matched the infinite-plate theory closely, a finite-width correction that tracked a published curve fit to within 2% across four plate widths, and a concrete, thickness-based answer to when plane stress is (and isn't) a valid assumption: solid at t&nbsp;=&nbsp;4&nbsp;mm, questionable by t&nbsp;=&nbsp;40&nbsp;mm, and clearly invalid by t&nbsp;=&nbsp;400&nbsp;mm, where out-of-plane stress remained near 1&nbsp;MPa through most of the plate's interior.",
         tags=["Abaqus", "Finite Element Method", "Stress Analysis", "Structural Mechanics", "3D Modeling"],
-        links=[("Report / code", "#")],
+        links=[],
     ),
     dict(
         slug="ae353-final-project", category="projects", org="AE 353: Aerospace Control Systems", title="AE 353 Final Project",
@@ -500,7 +497,7 @@ PROJECTS = [
         tools_prose="Replace with the specific tools/languages used (e.g. Python, MATLAB/Simulink).",
         outcome="Replace with the result: performance achieved, stability margins, or simulation results.",
         tags=["Controls", "Dynamics", "Simulation"],
-        links=[("Report / code", "#")],
+        links=[],
     ),
     dict(
         slug="ae353-project-2", category="projects", org="AE 353: Aerospace Control Systems", title="AE 353 Project 2",
@@ -511,7 +508,7 @@ PROJECTS = [
         tools_prose="Replace with the specific tools/languages used.",
         outcome="Replace with the result and what it showed.",
         tags=["Controls", "Dynamics", "Simulation"],
-        links=[("Report / code", "#")],
+        links=[],
     ),
     dict(
         slug="ae370-final-project", category="projects", org="AE 370: Numerical Methods", title="AE 370 Final Project",
@@ -522,7 +519,7 @@ PROJECTS = [
         tools_prose="Replace with the specific language/libraries used (e.g. Python, NumPy).",
         outcome="Replace with the result: accuracy achieved, convergence behavior, or comparison to analytical/experimental results.",
         tags=["Numerical Methods", "Simulation"],
-        links=[("Report / code", "#")],
+        links=[],
     ),
 ]
 
@@ -558,6 +555,10 @@ def render_group(items, out_dir):
             f'<li><a href="{href}" target="_blank" rel="noopener">{label} &rarr;</a></li>'
             for label, href in item["links"]
         )
+        links_section_html = (
+            f'<h3>Links</h3>\n      <ul class="sidebar-links">\n        {links_html}\n      </ul>'
+            if item.get("links") else ""
+        )
         note_html = (
             f'<p class="text-muted reveal" style="font-size:0.92rem;font-style:italic;margin-top:0.6rem;max-width:700px;">{item["note"]}</p>'
             if item.get("note") else ""
@@ -581,7 +582,7 @@ def render_group(items, out_dir):
             note_html=note_html,
             media_html=media_html,
             tag_html=tag_html,
-            links_html=links_html,
+            links_section_html=links_section_html,
             section_id=cat["id"],
             crumb_label=cat["label"],
             nav_html=build_nav_html(prev_item, next_item, cat["id"], cat["label"]),
