@@ -563,14 +563,70 @@ PROJECTS = [
         links=[],
     ),
     dict(
-        slug="ae353-project-2", category="projects", org="AE 353: Aerospace Control Systems", title="AE 353 Project 2",
-        dates="Placeholder dates", location="University of Illinois",
-        lede="Placeholder one-sentence summary of the system modeled and controlled.",
-        overview="Replace with the problem statement: the system's dynamics and the control objective.",
-        what_i_did="Replace with specifics: the controller designed, simulation setup, and tuning process.",
-        tools_prose="Replace with the specific tools/languages used.",
-        outcome="Replace with the result and what it showed.",
-        tags=["Controls", "Dynamics", "Simulation"],
+        slug="reaction-wheel-attitude-control-with-star-tracker", category="projects", org="Aerospace Control Systems", title="Observer-Based Reaction-Wheel Attitude Control for a Spacecraft with a Star Tracker",
+        filled=True,
+        dates="Spring 2026", location="University of Illinois",
+        lede="Designed an LQR attitude controller, a symmetric four-wheel/four-star sensing geometry, and a noisy star-tracker observer to hold a simulated spacecraft's docking attitude for 60 seconds against debris disturbances, clearing the reliability requirement with 30 of 40 randomized trials (75%) succeeding.",
+        media=[
+            ("../assets/spacecraft-star-tracker/simulator-snapshot.png",
+             "Simulator snapshot of the spacecraft showing the symmetric four-reaction-wheel layout",
+             "Simulator snapshot of the spacecraft, showing the symmetric four-wheel layout chosen to give nearly isotropic control authority."),
+            ("../assets/spacecraft-star-tracker/star-tracks.png",
+             "Tracked-star trajectories in the star-tracker image plane during a representative successful rollout",
+             "Tracked-star trajectories in the image plane during a representative successful rollout. The four stars stay well inside the field-of-view boundary."),
+            ("../assets/spacecraft-star-tracker/attitude-envelope.png",
+             "Envelope of attitude magnitude across all successful rollouts, staying well below the requirement threshold",
+             "Attitude-magnitude envelope across every successful rollout: the median settles around 0.03&ndash;0.05 rad, well below the 0.20 rad requirement threshold."),
+        ],
+        overview="AE353 Design Project 2 asked for a controller that could hold a simulated spacecraft at a fixed docking attitude for 60 seconds despite noisy star-tracker measurements and impulsive debris disturbances, with the simulator ending the run early if any tracked star left the star-tracker&rsquo;s field of view or any reaction wheel exceeded its speed limit. The formal requirement was written in &ldquo;shall&rdquo; form and tied to a specific verification procedure: with the final controller run over 40 randomized rollouts, at least 28 of them had to reach 60 seconds with all three terminal attitude angles inside &plusmn;0.20 rad. The real design question wasn&rsquo;t just nominal stabilization, since a controller can look great on one clean run and still fail under different noise, disturbances, or initial conditions; it was how to arrange the wheels and stars for balanced authority and margin, and how to keep a stabilizing linear controller reliable once the observer is noisy and the wheels are close to saturating.",
+        what_i_did=(
+            "I placed the four reaction-wheel axes symmetrically around the body and chose four tracked stars arranged symmetrically about the boresight, near the center of the field of view, to leave margin for attitude excursions before a star could leave the frame. With four wheels controlling three body-torque axes, this geometry also leaves a one-dimensional null space I could use later for momentum management without disturbing the commanded torque. I linearized the nonlinear spacecraft dynamics about the zero-attitude, zero-rate equilibrium to get a six-state model in yaw, pitch, roll, and their body rates, and confirmed the linearized system was fully controllable before designing anything on top of it.</p>\n      "
+            + report_figure(
+                [("../assets/spacecraft-star-tracker/boresight-view.png", None)],
+                "Spacecraft view with the star-tracker boresight indicated. The symmetric star placement keeps the tracked stars centered, preserving margin within the field of view during moderate attitude excursions.",
+            )
+            + "\n      <p>For stabilization I designed a continuous-time LQR gain in body-torque coordinates, weighting attitude error the most heavily, body-rate damping second, and actuator effort third; that priority order came out of iterating on the design and watching where the closed loop actually struggled. Solving the algebraic Riccati equation gave a body-torque feedback gain that I then had to convert into four wheel-torque commands through the wheel-axis geometry matrix. A plain least-squares allocation of that conversion stabilized the nominal model but, under noisy rollouts, drove unnecessary wheel activity and let one wheel pair drift rapidly toward saturation.</p>\n      "
+            "<p>I fixed that with a few practical additions layered on top of the base LQR law. The allocator became a weighted least-squares solve that penalizes wheels whose estimated speed is already high, discouraging the controller from continuing to load up a fast wheel. A second term, computed in the allocator&rsquo;s null space, slowly bleeds off stored wheel momentum without changing the commanded body torque at all. I smoothed the resulting command with a simple exponential filter to cut down on noise-driven chatter, and added a soft-braking rule that scales the command down as any wheel&rsquo;s estimated speed approaches its limit, well before the hard saturation bound, so the controller backs off gracefully instead of slamming into the limit. Together these turned a controller that was stable in theory into one that behaved well under real, noisy, disturbed simulation.</p>\n      "
+            + '<figure class="report-figure">\n'
+            '      <div class="figure-media"><div><video src="../assets/spacecraft-star-tracker/video.mp4" controls preload="metadata" style="width:100%;display:block;background:#000;"></video></div></div>\n'
+            '      <figcaption>Full 60-second representative docking run using the final controller, observer, and wheel allocation scheme.</figcaption>\n'
+            '    </figure>'
+            + "\n      <p>On one representative 60-second rollout, all three attitude angles stayed comfortably inside the &plusmn;0.20 rad requirement bound the whole time, settling into a range of roughly 0.02 to 0.10 rad after the initial transient, with body rates generally within about &plusmn;0.08 rad/s. Wheel speeds stayed well clear of the &plusmn;50 rad/s limit, peaking below 30 rad/s, and the commanded torques stayed active throughout without ever showing sustained saturation. This run alone doesn&rsquo;t prove the design works, but it does show the closed-loop behavior is physically reasonable in the full nonlinear simulator, not just on paper.</p>\n      "
+            + report_figure(
+                [("../assets/spacecraft-star-tracker/representative-time-histories.png", None)],
+                "Time histories for the representative rollout: attitude angles, attitude magnitude, body rates, wheel speeds, and commanded torques, all staying comfortably inside their respective limits for the full 60 seconds.",
+            )
+            + "\n      <p>The observer&rsquo;s estimation errors for the same run show where the noise actually lives: the roll-angle estimate was the noisiest of the three attitude channels, and the body-rate estimate about the x-axis was visibly noisier than the other two rate channels. That&rsquo;s part of why command smoothing and the soft-braking margin mattered: the raw noisy estimate was usable for feedback, but not clean enough to command straight through to the wheels without some filtering.</p>\n      "
+            + report_figure(
+                [("../assets/spacecraft-star-tracker/representative-estimation-errors.png", None)],
+                "Observer estimation errors for the same rollout. The roll-angle estimate and the x-axis body-rate estimate carry the most noise, motivating the command smoothing and soft-braking margin used downstream.",
+            )
+            + "\n      <p>To check reliability rather than just one good run, I evaluated the final controller over 40 randomized rollouts with star-tracker noise and debris disturbances enabled. Thirty of the forty reached the full 60-second interval within the terminal-attitude bound, a 75% success rate against the 70% (28-of-40) requirement, with a mean survival time of 53.00 s and a mean RMS attitude magnitude of 0.0645 rad across the batch.</p>\n      "
+            + report_figure(
+                [
+                    ("../assets/spacecraft-star-tracker/survival-time-histogram.png", "Survival time"),
+                    ("../assets/spacecraft-star-tracker/rms-attitude-histogram.png", "RMS attitude magnitude"),
+                ],
+                "Survival-time and RMS-attitude-magnitude distributions across the 40-rollout batch. Survival time concentrates heavily at the full 60 s docking time, consistent with the 75% success rate.",
+            )
+            + "\n      <p>Plotting survival time against RMS attitude magnitude makes the failure mechanism clear: runs with low RMS attitude generally survive the full interval, while the early failures cluster at higher RMS values, meaning the spacecraft was tumbling too much before it ran out of field of view. Breaking outcomes down by category confirmed why: every one of the ten non-successes fell into star loss or a closely related early termination, and not a single rollout failed by exceeding the wheel-speed limit. The weighted allocation and soft braking were doing their job on the actuator side; the remaining weak point was keeping stars centered under large, randomized disturbances.</p>\n      "
+            + report_figure(
+                [
+                    ("../assets/spacecraft-star-tracker/survival-vs-rms-scatter.png", "Survival time vs. RMS attitude"),
+                    ("../assets/spacecraft-star-tracker/failure-mode-bar-chart.png", "Outcome categories"),
+                ],
+                "Survival time versus RMS attitude magnitude (left) and outcome categories (right): all ten non-successes were star-loss events, with zero wheel-speed-limit failures.",
+            )
+            + "\n      <p>Looking at the attitude-magnitude envelope across every successful run shows how consistent the controller was once past the initial transient: the 10th-to-90th-percentile band narrows quickly, and the median settles around 0.03 to 0.05 rad for most of the docking interval, comfortably below the 0.20 rad requirement.</p>\n      "
+            + report_figure(
+                [("../assets/spacecraft-star-tracker/attitude-envelope.png", None)],
+                "Attitude-magnitude envelope (10th to 90th percentile, with median) across all successful rollouts. After the initial transient, the successful runs are fairly consistent and stay well under the requirement threshold.",
+            )
+            + "\n      <p>The overall lesson was that small-signal stability was never the hard part; an LQR gain stabilizes the linearized model easily. The real work, and the real source of remaining failures, was in the practical details: sensor geometry, noise-aware wheel allocation, momentum management, and saturation handling in the full nonlinear simulator."
+        ),
+        tools_prose="Computed the linearization, controllability check, and continuous-time Riccati solve for the LQR gain in Python with NumPy and SciPy, then implemented the wheel-torque allocator, null-space momentum draining, command smoothing, and soft-braking logic on top of the course-provided star-tracker observer and spacecraft simulator. Used Matplotlib for every time history, histogram, scatter plot, and envelope plot, and recorded a full 60-second docking run as a simulation video.",
+        outcome="Ended up with a controller that satisfied the formal reliability requirement: 30 of 40 randomized rollouts succeeded (75%), against a 28-of-40 (70%) threshold, with a mean survival time of 53.00 s and mean RMS attitude magnitude of 0.0645 rad across the batch. The representative run held RMS attitude error to 0.0587 rad with a maximum wheel speed of 26.40 rad/s, and every one of the ten non-successes in the aggregate batch was a star-loss event rather than a wheel-speed-limit failure, pointing clearly at where the remaining design margin is spent.",
+        tags=["Python", "NumPy", "SciPy", "Control Systems", "LQR", "State Estimation", "Spacecraft Attitude Control"],
         links=[],
     ),
     dict(
