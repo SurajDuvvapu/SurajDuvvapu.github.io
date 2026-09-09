@@ -101,7 +101,7 @@ TEMPLATE = """<!doctype html>
     <div class="footer-top">
       <div>
         <h3 class="footer-heading">Let&rsquo;s talk engineering.</h3>
-        <p class="text-muted mt-0">Open to new grad and internship opportunities in aerospace engineering.</p>
+        <p class="text-muted mt-0">Open to new grad and internship opportunities in mechanical and aerospace engineering.</p>
       </div>
       <div class="footer-links">
         <a href="mailto:duvvapu2@illinois.edu">Email</a>
@@ -402,7 +402,7 @@ EXPERIENCE = [
         title="Aerodynamics Project Lead",
         filled=True,
         dates="August 2023 – Present", location="Champaign, IL",
-        lede="Lead the aerodynamics program for Illinois’ Formula SAE car — designing and validating the undertray, nosecone, front damper cover, and airfoil inserts through parameterized CAD, StarCCM+ CFD, and ANSYS FEA, then manufacturing them in carbon fiber with the team.",
+        lede="Lead critical aerodynamics projects for Illinois’ Formula SAE car — designing and validating the undertray, nosecone, front damper cover, and airfoil inserts through parameterized CAD, StarCCM+ CFD, and ANSYS FEA, then manufacturing them in carbon fiber with the team.",
         media=[
             ("../assets/formula-sae/ut-mounting-cad.png",
              "CAD assembly of the five-piece undertray mounted to the monocoque, showing the venturi, skirt, diffuser and support cables",
@@ -415,7 +415,7 @@ EXPERIENCE = [
              "A finished carbon fiber venturi section out of the mold — the end of a design cycle that started in CFD."),
         ],
         overview=(
-            "Illini Electric Motorsports builds and races an electric Formula SAE car, and I have led its aerodynamics program since 2023. The aero package is judged the same way every other subsystem is: by <em>points</em>, a full-vehicle simulation of the dynamic events at competition that converts a change in lift coefficient, drag coefficient, and mass into a single number. A part earns its place on the car only if it is points positive, so every study on this page ends in the same currency — not just “more downforce,” but whether the downforce is worth the drag and the weight it costs.</p>\n      "
+            "Illini Electric Motorsports builds and races an electric Formula SAE car, and since 2023 I have led several of its most critical aerodynamics projects. The aero package is judged the same way every other subsystem is: by <em>points</em>, a full-vehicle simulation of the dynamic events at competition that converts a change in lift coefficient, drag coefficient, and mass into a single number. A part earns its place on the car only if it is points positive, so every study on this page ends in the same currency — not just “more downforce,” but whether the downforce is worth the drag and the weight it costs.</p>\n      "
             "<p>Across three seasons I have owned three major projects on that package: the airfoil inserts that carry every wing element’s load into the chassis (2023–25), the nosecone and front damper cover (2024–25), and the undertray — the single largest downforce producer on the car (2025–26). Each one ran the full cycle: market and rules research, a parameterized CAD model, CFD sweeps, structural sizing by hand calculation and FEA, a manufacturing plan, and then the layups themselves."
         ),
         what_i_did=(
