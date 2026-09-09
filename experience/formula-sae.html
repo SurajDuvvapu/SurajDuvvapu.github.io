@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Aerodynamics Project Lead, Illini Electric Motorsports, Formula SAE | Suraj Duvvapu</title>
-<meta name="description" content="Placeholder one-sentence summary: led the team's aero package design." />
+<meta name="description" content="Lead the aerodynamics program for Illinois’ Formula SAE car — designing and validating the undertray, nosecone, front damper cover, and airfoil inserts through parameterized CAD, StarCCM+ CFD, and ANSYS FEA, then manufacturing them in carbon fiber with the team." />
 <link rel="stylesheet" href="../styles.css" />
 </head>
 <body>
@@ -33,40 +33,149 @@
     </div>
     <span class="eyebrow reveal">Leadership</span>
     <h1 class="detail-title reveal">Aerodynamics Project Lead</h1>
-    <p class="detail-lede reveal">Placeholder one-sentence summary: led the team's aero package design.</p>
+    <p class="detail-lede reveal">Lead the aerodynamics program for Illinois’ Formula SAE car — designing and validating the undertray, nosecone, front damper cover, and airfoil inserts through parameterized CAD, StarCCM+ CFD, and ANSYS FEA, then manufacturing them in carbon fiber with the team.</p>
     
     <div class="detail-meta reveal">
       <span><strong>Organization</strong> &nbsp;Illini Electric Motorsports, Formula SAE</span>
-      <span><strong>Dates</strong> &nbsp;Placeholder dates</span>
-      <span><strong>Location</strong> &nbsp;Urbana-Champaign, IL</span>
+      <span><strong>Dates</strong> &nbsp;August 2023 – Present</span>
+      <span><strong>Location</strong> &nbsp;Champaign, IL</span>
     </div>
   </div>
 </header>
 
 <div class="container">
-  <div class="media-frame reveal">
-    Add a photo, render, CAD screenshot, or diagram here. Replace this placeholder frame in formula-sae.html.
+  <div class="media-gallery reveal">
+    <figure>
+      <div class="media-thumb">
+        <img src="../assets/formula-sae/ut-mounting-cad.png" alt="CAD assembly of the five-piece undertray mounted to the monocoque, showing the venturi, skirt, diffuser and support cables" loading="lazy" />
+      </div>
+      <figcaption>The undertray as designed: venturi, skirt, and diffuser sections mounted to the monocoque with aluminum brackets and pre-loaded steel cables.</figcaption>
+    </figure>
+    <figure>
+      <div class="media-thumb">
+        <img src="../assets/formula-sae/nosecone-final-render.png" alt="CAD render of the final nosecone geometry, 13 inches high, 2 inches wide at the tip and 16 inches long" loading="lazy" />
+      </div>
+      <figcaption>The final nosecone — Run D (Wide), 13&nbsp;in high, 2&nbsp;in tip width, 16&nbsp;in long, at 1.242&nbsp;lbs and points positive.</figcaption>
+    </figure>
+    <figure>
+      <div class="media-thumb">
+        <img src="../assets/formula-sae/venturi-finished-part.jpg" alt="Finished carbon fiber venturi section standing on a workbench in the team shop" loading="lazy" />
+      </div>
+      <figcaption>A finished carbon fiber venturi section out of the mold — the end of a design cycle that started in CFD.</figcaption>
+    </figure>
   </div>
 
   <div class="detail-grid">
     <article class="prose">
       <h2>Overview</h2>
-      <p class="placeholder">Replace with context on the team, the car program/season, and your role leading the aero subteam.</p>
+      <p>Illini Electric Motorsports builds and races an electric Formula SAE car, and I have led its aerodynamics program since 2023. The aero package is judged the same way every other subsystem is: by <em>points</em>, a full-vehicle simulation of the dynamic events at competition that converts a change in lift coefficient, drag coefficient, and mass into a single number. A part earns its place on the car only if it is points positive, so every study on this page ends in the same currency — not just “more downforce,” but whether the downforce is worth the drag and the weight it costs.</p>
+      <p>Across three seasons I have owned three major projects on that package: the airfoil inserts that carry every wing element’s load into the chassis (2023–25), the nosecone and front damper cover (2024–25), and the undertray — the single largest downforce producer on the car (2025–26). Each one ran the full cycle: market and rules research, a parameterized CAD model, CFD sweeps, structural sizing by hand calculation and FEA, a manufacturing plan, and then the layups themselves.</p>
 
       <h2>What I did</h2>
-      <p class="placeholder">Replace with specifics: CFD studies run, wing/diffuser/undertray design, wind-tunnel or track testing, and team leadership.</p>
+      <p><strong>Undertray (2025–26).</strong> The previous season’s car ran a full-body undertray that outperformed everything before it but was, by the team’s own account, bulky, hard to work around, driven by strength rather than stiffness, and ultimately assembled as a hybrid floor after manufacturing problems. My brief was to match its downforce at equal or lower weight, package it so it could come on and off the car quickly, manufacture it accurately enough that real-world performance matched CFD, and keep the downforce build-up linear with speed so the static-margin migration stayed predictable for the driver.</p>
+      <p>I started with a weighted decision matrix across four concepts — a single full-body undertray, a full-body integrated undertray plus diffuser, and the same with venturis — scored on performance, mass, cost, design and analysis complexity, serviceability, integration, risk, and fixability. The integrated concept where the monocoque itself becomes the floor won (102 against 66 for the outgoing design), because it moves the floor into the monocoque layup, frees packaging space, lowers CG, and shrinks every mold enough to manufacture in house.</p>
+      <figure class="report-figure figure-pair">
+      <div class="figure-media"><div><img src="../assets/formula-sae/ut-initial-cad.png" alt="The initial parameterized undertray: inlet, venturis, skirts and diffuser" loading="lazy" /><div class="figure-sublabel">The initial parameterized undertray: inlet, venturis, skirts and diffuser</div></div><div><img src="../assets/formula-sae/ut-fullcar-cad.png" alt="The same geometry in the full-car CFD model" loading="lazy" /><div class="figure-sublabel">The same geometry in the full-car CFD model</div></div></div>
+      <figcaption>Figure 1: I carried the inlet over from the previous car but parameterized the venturi width and y-placement, inlet and outlet in x, height, and curve parameters, plus diffuser outboard width, inboard and outboard height, and curvature — which opened up skirts, footplates and vortex generators as design variables. The initial design nearly doubled undertray performance.</figcaption>
+    </figure>
+      <p>From there the season was a sequence of CFD sweeps. Venturi height swept from 8.5&nbsp;in to 12.5&nbsp;in, with a curve fit to the points data putting the optimum at 11.24&nbsp;in. An inlet height study traded undertray sensitivity against monocoque height sensitivity and produced the season’s most useful insight: a tall inlet performed better, but only because it forced the inlet to narrow faster to clear the A-arms. Re-running a short inlet with that same aggressive narrowing recovered the gain, so the short inlet — far better for the monocoque — was chosen. I concluded the air entering the undertray is drawn in by the venturi and diffuser, not admitted by the size of the inlet.</p>
+      <figure class="report-figure">
+      <div class="figure-media"><div><img src="../assets/formula-sae/ut-venturi-height-sweep.png" alt="Figure 2: Pressure coefficient through the venturi during the first height sweep. Sweeps like this one, run through scripted StarCCM+ cases, are what set the frozen venturi and diffuser dimensions the monocoque design depended on." loading="lazy" /></div></div>
+      <figcaption>Figure 2: Pressure coefficient through the venturi during the first height sweep. Sweeps like this one, run through scripted StarCCM+ cases, are what set the frozen venturi and diffuser dimensions the monocoque design depended on.</figcaption>
+    </figure>
+      <p>Diffuser height and length were swept next, constrained to a maximum 5° angle from the end of the venturi and traded against the CG gain from dropping the accumulator. The study ended with two designs within a point of each other — a long, tall diffuser and a short one — and the short one was chosen for jacking-bar packaging. That they were so close was itself the finding: with venturis that large there simply is not enough air left to feed a big diffuser, so the larger design mostly moved downforce rearward rather than creating any.</p>
+      <figure class="report-figure">
+      <div class="figure-media"><div><img src="../assets/formula-sae/ut-aarm-mesh-cfd.png" alt="Figure 3: Adding the outboards — A-arms, uprights, and the rest — to the CFD model cost roughly half the points gained to that point, dropping the design from 8.62 to 4.52 points and forcing a full re-sweep of venturi width and height. The venturi ended up narrowed by 0.5&nbsp;in from the monocoque and raised to 11.5&nbsp;in." loading="lazy" /></div></div>
+      <figcaption>Figure 3: Adding the outboards — A-arms, uprights, and the rest — to the CFD model cost roughly half the points gained to that point, dropping the design from 8.62 to 4.52 points and forcing a full re-sweep of venturi width and height. The venturi ended up narrowed by 0.5&nbsp;in from the monocoque and raised to 11.5&nbsp;in.</figcaption>
+    </figure>
+      <p>With the primary geometry frozen I moved to the tuning devices. Strakes turned out to be strongly points positive: full strakes spanning the diffuser block the tire wake, and partial strakes shed a vortex that helps the full ones without choking the intake. Vortex generators — a 1&nbsp;in semicircle running the length of the skirt — were mildly positive, sealing the venturi tunnels by mixing high- and low-pressure air into a wall. Gurney flaps were barely positive and only survived on the diffuser. The tire plate was the season’s one real failure: it was points positive in isolation, but with the new rear wing it fed low-quality air straight into the wing and cost more than it gave. I tested several revised plates, none worked, and I killed it late in the process rather than carry the weight and complexity for a marginal part.</p>
+      <figure class="report-figure figure-pair">
+      <div class="figure-media"><div><img src="../assets/formula-sae/ut-strakes-cad.png" alt="Full and partial strakes on the diffuser" loading="lazy" /><div class="figure-sublabel">Full and partial strakes on the diffuser</div></div><div><img src="../assets/formula-sae/ut-strakes-cfd.png" alt="Strake performance in CFD" loading="lazy" /><div class="figure-sublabel">Strake performance in CFD</div></div></div>
+      <figcaption>Figure 4: Strakes were the most points-positive addition of the year — mounted on bonded carbon fiber tabs rather than rivets to keep drag down.</figcaption>
+    </figure><figure class="report-figure figure-pair">
+      <div class="figure-media"><div><img src="../assets/formula-sae/ut-vortex-generator-cad.png" alt="The 1&nbsp;in semicircular vortex generator running the length of the skirt" loading="lazy" /><div class="figure-sublabel">The 1&nbsp;in semicircular vortex generator running the length of the skirt</div></div><div><img src="../assets/formula-sae/ut-vortex-generator-velocity.png" alt="Velocity magnitude through the vortex generator" loading="lazy" /><div class="figure-sublabel">Velocity magnitude through the vortex generator</div></div></div>
+      <figcaption>Figure 5: The vortex generator seals the venturi tunnel by trapping a vortex against the skirt, keeping outside high-pressure air from leaking in.</figcaption>
+    </figure><figure class="report-figure figure-pair">
+      <div class="figure-media"><div><img src="../assets/formula-sae/ut-underside-cp-previous.png" alt="Underside pressure coefficient, previous car" loading="lazy" /><div class="figure-sublabel">Underside pressure coefficient, previous car</div></div><div><img src="../assets/formula-sae/ut-underside-cp-final.png" alt="Underside pressure coefficient, new undertray" loading="lazy" /><div class="figure-sublabel">Underside pressure coefficient, new undertray</div></div></div>
+      <figcaption>Figure 6: Underside C<sub>p</sub> before and after. The new floor generates ground-effect downforce at the throat and along the skirt; the honest weaknesses are the vortex shed off the skirt air, wheel lift a working tire plate would have solved, and a high-pressure zone at the venturi outlet.</figcaption>
+    </figure>
+      <p><strong>Structures, mounting and manufacturing.</strong> The undertray is not allowed to scrape, so deformation — not strength — drove the entire structural design. I set a 1/8&nbsp;in deflection target at 95&nbsp;mph aerodynamic loads so the scrape map would barely move, then sized the laminate and the mounting together in ANSYS. Loads came from the CFD: 443.6&nbsp;lbs of downforce in z at 95&nbsp;mph, of which about a third is carried by each cantilevered venturi section, modeled as 148&nbsp;lbs acting 8&nbsp;in outboard of the chassis, plus a 45&nbsp;mph cone strike worst-cased as 869.9&nbsp;lbs entirely in x on the front corner of the skirt.</p>
+      <figure class="report-figure">
+      <div class="figure-media"><div><img src="../assets/formula-sae/ut-ansys-deformation.png" alt="Figure 7: ANSYS total deformation of the venturi section with the support cables modeled as springs — the deformation at the cable mounts is the spring, not the laminate." loading="lazy" /></div></div>
+      <figcaption>Figure 7: ANSYS total deformation of the venturi section with the support cables modeled as springs — the deformation at the cable mounts is the spring, not the laminate.</figcaption>
+    </figure>
+      <p>It became clear early that brackets alone could not hold the outboard section, so I added pre-loaded steel cables: lighter and smaller than tie rods, and capable of carrying vertical inertial loads in compression through pre-load. I placed brackets to put only one on each side in the regulated section of the monocoque where holes cannot be drilled, one at each end of the venturi, one ahead of the front hoop, all evenly spaced and reachable by hand. The 6061 aluminum brackets were sized against bending from pre-load, peeling, and shear; the aluminum potted inserts against shear and composite pull-through; and the 304 stainless cables against tensile failure and displacement — landing on a 1/16&nbsp;in cable with a safety factor of 1.35 to displacement and 3.08 to yield, against a team target of 1.7 to yield on all loads. Cone-strike shear came out with a safety factor of 6.76.</p>
+      <figure class="report-figure">
+      <div class="figure-media"><div><img src="../assets/formula-sae/ut-mounting-brackets-cables.png" alt="Figure 8: Bracket and cable placement along the venturi. Cables were moved inboard during ply scheduling to cut deformation, and the skirt was angled slightly to let its trailing edge deflect without scraping." loading="lazy" /></div></div>
+      <figcaption>Figure 8: Bracket and cable placement along the venturi. Cables were moved inboard during ply scheduling to cut deformation, and the skirt was angled slightly to let its trailing edge deflect without scraping.</figcaption>
+    </figure><figure class="report-figure figure-pair">
+      <div class="figure-media"><div><img src="../assets/formula-sae/ut-scrape-map-nodeformation.png" alt="Scrape map with no deformation" loading="lazy" /><div class="figure-sublabel">Scrape map with no deformation</div></div><div><img src="../assets/formula-sae/ut-scrape-map-95mph.png" alt="Scrape map under 95&nbsp;mph loads" loading="lazy" /><div class="figure-sublabel">Scrape map under 95&nbsp;mph loads</div></div></div>
+      <figcaption>Figure 9: The downforce/scrape map across front and rear heave spring rates, undeformed and at 95&nbsp;mph. Keeping the operating box (black outline) inside the green region is what set the laminate: a 0/45/0/45/core/0/45/0/45 T700s woven carbon schedule for the venturi, with the skirt laid up 1.8° from horizontal so it clears the ground under load.</figcaption>
+    </figure>
+      <p>The last integration decision was how many pieces to build. Three was the plan — two venturis and a diffuser — but the rear bulkhead comes in and out of the car constantly and the diffuser has to come with it, so I moved to five pieces to shorten the length of undertray that has to be re-taped and re-sealed every time. The split line was chosen so the outermost strake on each side stays on a single piece, keeping the most important strake fully effective.</p>
+      <figure class="report-figure">
+      <div class="figure-media"><div><img src="../assets/formula-sae/ut-five-piece-split.png" alt="Figure 10: The five-piece split. Venturi molds were outsourced (the part is too large for our ShopBot), the rest were made in house, brackets milled, and strakes waterjetted." loading="lazy" /></div></div>
+      <figcaption>Figure 10: The five-piece split. Venturi molds were outsourced (the part is too large for our ShopBot), the rest were made in house, brackets milled, and strakes waterjetted.</figcaption>
+    </figure>
+      <p><strong>Nosecone and front damper cover (2024–25).</strong> I redesigned the nosecone and front damper system in Creo, building parameterized CAD models driven by dynamic bounding-box references and monocoque geometry constraints so the parts stayed rules-legal and correctly mated as the chassis around them changed. The nosecone had three constraints: every forward-facing edge needs a minimum 1.5&nbsp;in radius extending 45° or more in every direction, it had to weigh no more than the previous 1&nbsp;lb part, and it had to be points positive on lift, drag and weight together. I parameterized tip width, tip height and length from the front bulkhead, and swept them.</p>
+      <figure class="report-figure figure-pair">
+      <div class="figure-media"><div><img src="../assets/formula-sae/nc-tip-height-low.png" alt="Low tip: 13&nbsp;in high, 2&nbsp;in wide" loading="lazy" /><div class="figure-sublabel">Low tip: 13&nbsp;in high, 2&nbsp;in wide</div></div><div><img src="../assets/formula-sae/nc-tip-height-high.png" alt="High tip: 14&nbsp;in high, 2&nbsp;in wide" loading="lazy" /><div class="figure-sublabel">High tip: 14&nbsp;in high, 2&nbsp;in wide</div></div></div>
+      <figcaption>Figure 11: Tip height. A lower tip lets the front wing exert higher pressure on its upper surface; a high tip puts a high-C<sub>p</sub> region under the nose and generates lift. Lower was better across all three lift coefficients.</figcaption>
+    </figure>
+      <p>Tip width traded stagnation behavior against mass: the narrow 1.5&nbsp;in tip keeps stagnation points closer to ambient air and diffuses high pressure to low pressure more effectively, but the 2&nbsp;in wide tip weighs substantially less — 0.977&nbsp;lbs against 1.358&nbsp;lbs — and won on points. I also ran a three-way study on whether to cover the chamfered edge where the nosecone meets the front wing.</p>
+      <figure class="report-figure figure-triple">
+      <div class="figure-media"><div><img src="../assets/formula-sae/nc-chamfer-covered.png" alt="Run D covered, 1.391&nbsp;lbs" loading="lazy" /><div class="figure-sublabel">Run D covered, 1.391&nbsp;lbs</div></div><div><img src="../assets/formula-sae/nc-chamfer-wide.png" alt="Run D wide, 1.242&nbsp;lbs" loading="lazy" /><div class="figure-sublabel">Run D wide, 1.242&nbsp;lbs</div></div><div><img src="../assets/formula-sae/nc-chamfer-none.png" alt="No chamfer, 1.401&nbsp;lbs" loading="lazy" /><div class="figure-sublabel">No chamfer, 1.401&nbsp;lbs</div></div></div>
+      <figcaption>Figure 12: Covering the chamfer gives the best nosecone-plus-chassis lift coefficient, and removing the chamfer entirely is aerodynamically ideal — but the no-chamfer geometry interferes with the front wing mainplane, and the cover is heavier for fewer points. Run D (wide) won on the whole picture.</figcaption>
+    </figure>
+      <p>The final nosecone is 13&nbsp;in high, 2&nbsp;in at the tip and 16&nbsp;in long, at 1.242&nbsp;lbs, laid up in two plies over in-house female molds and bolted rather than bonded through six easily reached fasteners so it comes on and off quickly.</p>
+      
+      <p>The front damper cover had a different set of constraints: sufficiently rigid in the static condition, able to take nominal aerodynamic loads, clearing the swept damper package through full travel, flush to the monocoque, mountable by one person in thirty seconds — and, critically, it could not block the driver’s sightline. I ran a physical visibility check with a driver seated in the car and modeled the sightline in CAD for each candidate profile.</p>
+      <figure class="report-figure figure-pair">
+      <div class="figure-media"><div><img src="../assets/formula-sae/dc-visibility-baseline.png" alt="Sightline over the bare monocoque" loading="lazy" /><div class="figure-sublabel">Sightline over the bare monocoque</div></div><div><img src="../assets/formula-sae/dc-visibility-with-cover.png" alt="Sightline with the damper cover fitted" loading="lazy" /><div class="figure-sublabel">Sightline with the damper cover fitted</div></div></div>
+      <figcaption>Figure 13: Driver sightline study. The cover profile was constrained by what the driver has to be able to see over.</figcaption>
+    </figure><figure class="report-figure figure-triple">
+      <div class="figure-media"><div><img src="../assets/formula-sae/dc-cfd-baseline.png" alt="Baseline: no cover" loading="lazy" /><div class="figure-sublabel">Baseline: no cover</div></div><div><img src="../assets/formula-sae/dc-cfd-streamlined.png" alt="Streamlined cover" loading="lazy" /><div class="figure-sublabel">Streamlined cover</div></div><div><img src="../assets/formula-sae/dc-cfd-bulky.png" alt="Bulky cover" loading="lazy" /><div class="figure-sublabel">Bulky cover</div></div></div>
+      <figcaption>Figure 14: Total-pressure fields for the three damper-cover profiles. Both covers improve total lift coefficient (−1.95 to −1.97 and −1.99) at unchanged drag, and both feed the rear wing slightly better — the design settled on a two-ply Toray 0° laminate mounted flush to the monocoque.</figcaption>
+    </figure><figure class="report-figure">
+      <div class="figure-media"><div><img src="../assets/formula-sae/dc-cad-flush.png" alt="Figure 15: The damper cover sitting flush to the monocoque, with clearance to the full damper sweep." loading="lazy" /></div></div>
+      <figcaption>Figure 15: The damper cover sitting flush to the monocoque, with clearance to the full damper sweep.</figcaption>
+    </figure>
+      <p><strong>Airfoil inserts (2023–25).</strong> Inserts sit inside every aerodynamic element at the inboard and outboard ends. They carry the element’s lift and drag and provide the threaded interface that bolts wings to the endplates, struts and monocoque — which makes them small parts with a large consequence: the previous car had cracked a second inboard insert, most likely from over-constraint, and the team had been bitten before by heat-set threaded inserts sized to the wrong spec. My goal was to reassess and optimize the whole family, stripping out weight and unnecessary structure without giving up margin.</p>
+      
+      <p>I derived the loads rather than guessing them: I took total front and rear wing downforce and drag from full-car StarCCM+ runs at 95&nbsp;mph (a 70&nbsp;mph car speed with a 25&nbsp;mph headwind) and extrapolated a load per element from each element’s frontal and top surface area. Each element is then treated as a cantilever fixed at the bolted end, with the resultant acting roughly one half to two thirds of the span outboard, giving a moment at the insert of about one eighth of the total force times the span. Bolts were hand-calculated for shear capacity, since they are loaded primarily in shear.</p>
+      <figure class="report-figure">
+      <div class="figure-media"><div><img src="../assets/formula-sae/ins-hand-calcs.png" alt="Figure 16: Hand calculations for the rear wing bolt shear capacity, worked against the airfoil cross-section the insert sits inside." loading="lazy" /></div></div>
+      <figcaption>Figure 16: Hand calculations for the rear wing bolt shear capacity, worked against the airfoil cross-section the insert sits inside.</figcaption>
+    </figure>
+      <p>For FEA I brought the geometry into ANSYS Mechanical and worked through the boundary conditions carefully. Remote force to simulate the moment arm gave results I could not justify, so I switched to bearing loads on the cylindrical faces with a fixed support along the outer surface of the insert to represent the epoxy bond — assuming the epoxy and surrounding carbon fiber are effectively infinitely stiff. I then ran stress, deflection and topology optimization studies and redesigned each insert in Creo around the results.</p>
+      <figure class="report-figure figure-pair">
+      <div class="figure-media"><div><img src="../assets/formula-sae/ins-fea-vonmises-a.png" alt="Von Mises stress through the insert body" loading="lazy" /><div class="figure-sublabel">Von Mises stress through the insert body</div></div><div><img src="../assets/formula-sae/ins-fea-vonmises-b.png" alt="Stress concentrations around the bolt bosses" loading="lazy" /><div class="figure-sublabel">Stress concentrations around the bolt bosses</div></div></div>
+      <figcaption>Figure 17: Von Mises results for a redesigned insert. The team-wide target was a factor of safety of 1.6 to yield; after the previous season’s cracked insert I designed this family to 2.0.</figcaption>
+    </figure>
+      <p>Material and process were decided by trade study. I moved the whole family to SLS-printed Nylon PA-12 after the previous year’s attempt at FDM with ABS composite: SLS gives higher tensile strength, thermal resistance and impact resistance, needs no supports for complex geometry, and is dimensionally consistent, where FDM nylon is noticeably anisotropic with yield strength that depends on print orientation. PA-12 yields at roughly 40.6&nbsp;MPa in tensile testing with a modulus near 1.6&nbsp;GPa, and 48&nbsp;MPa in the ZX orientation — and I noted the discrepancy between that and the nylon properties in the ANSYS material library as a known source of error in the stress concentrations. Print parts were outsourced. I also sized every heat-set threaded hole in CAD directly to the McMaster spec sheet, closing out the failure mode that had cost the team inserts in previous years.</p>
+      
+      <p><strong>Manufacturing and mentorship.</strong> Design work only counts once the part exists. I led 80+ hours of composite laminate layups with dozens of team members to manufacture a 20-element aerodynamic package and the full monocoque — mold prep, ply cutting and orientation, wet layup, vacuum bagging and cure. I also delivered technical seminars on core aerodynamic principles — boundary layer growth, flow separation, and vortex dynamics — to train and mentor new members so they could take on their own studies.</p>
+      <figure class="report-figure figure-pair">
+      <div class="figure-media"><div><img src="../assets/formula-sae/ut-carbon-layup.jpg" alt="Laying carbon fiber into the venturi mold" loading="lazy" /><div class="figure-sublabel">Laying carbon fiber into the venturi mold</div></div><div><img src="../assets/formula-sae/ut-vacuum-bag-layup.jpg" alt="Vacuum bagging the part before cure" loading="lazy" /><div class="figure-sublabel">Vacuum bagging the part before cure</div></div></div>
+      <figcaption>Figure 18: Layup and vacuum bagging in the team shop. Planning how the carbon is arranged on the venturi <em>before</em> the layup — and accepting more than one piece of carbon per ply — was one of the clearest lessons of the season.</figcaption>
+    </figure></p>
 
       <h2>Tools &amp; methods</h2>
-      <p class="placeholder">Replace with the specific CFD/CAD tools (e.g. SolidWorks, ANSYS Fluent) and manufacturing methods you used.</p>
+      <p>CAD in PTC Creo, with parameterized models driven by dynamic bounding-box references and monocoque geometry constraints so parts stay rules-legal and correctly mated as the chassis evolves. CFD in Simcenter StarCCM+, where I optimized the team’s workflow by enhancing its Java macro scripts and moving to k-omega SST turbulence modeling, which made test data repeatable across runs and the aerodynamic analysis more precise. Structural work in ANSYS Mechanical — static structural stress, deflection and topology optimization, with loads extrapolated from CFD results — backed by hand calculations in spreadsheets for bolt shear, bracket bending and peeling, cable sizing, and composite pull-through. Manufacturing in woven T700s and Toray carbon fiber over in-house and outsourced molds, plus SLS-printed Nylon PA-12, waterjet and milled 6061 aluminum, and 304 stainless cable.</p>
 
       <h2>Outcome</h2>
-      <p class="placeholder">Replace with the result: downforce/drag numbers achieved, competition placement, or parts manufactured and raced.</p>
+      <p>Redesigning the nosecone and front damper system improved undertray aerodynamic efficiency (C<sub>L</sub>&nbsp;−&nbsp;C<sub>D</sub>) from −5.62 to −10.17, reduced the chassis drag coefficient by 0.15, enhanced rear wing lift by 0.8, and lowered the monocoque drag coefficient by 1.1. The structural work on the airfoil inserts — CFD-extrapolated loads through ANSYS FEA for stress, deflection and topology optimization — led to a redesigned model in Creo that cut 2&nbsp;lbs of component weight.</p>
+      <p>On the undertray, the integrated five-piece design came out both faster and lighter than the part it replaced, dropping undertray mass from 12.36&nbsp;lbs to 9.70&nbsp;lbs while raising the whole car’s points score, with every mounting element carrying positive margin against the team’s 1.7 factor-of-safety target. Alongside the analysis, I led 80+ hours of composite laminate layups with dozens of members to manufacture a 20-element aerodynamic package and a full monocoque, and delivered technical seminars on boundary layer growth, flow separation and vortex dynamics to train and mentor new team members.</p>
     </article>
 
     <aside class="sidebar reveal">
       <h3>Skills &amp; tools</h3>
       <div class="tag-list">
+        <span class="tag">Creo</span>
+        <span class="tag">StarCCM+</span>
+        <span class="tag">ANSYS FEA</span>
         <span class="tag">CFD</span>
+        <span class="tag">Composites</span>
         <span class="tag">Aerodynamics</span>
         <span class="tag">Team Leadership</span>
       </div>
