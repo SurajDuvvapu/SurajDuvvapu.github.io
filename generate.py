@@ -101,7 +101,7 @@ TEMPLATE = """<!doctype html>
     <div class="footer-top">
       <div>
         <h3 class="footer-heading">Let&rsquo;s talk engineering.</h3>
-        <p class="text-muted mt-0">Open to new grad and internship opportunities in mechanical &amp; aerospace engineering.</p>
+        <p class="text-muted mt-0">Open to new grad and internship opportunities in aerospace engineering.</p>
       </div>
       <div class="footer-links">
         <a href="mailto:duvvapu2@illinois.edu">Email</a>
@@ -396,18 +396,6 @@ EXPERIENCE = [
         ),
         tags=["X-Ray CT", "Deep Learning Segmentation", "Composites", "Python Image Analysis", "Dragonfly", "Mechanical Testing"],
         links=[("Research group site", "#")],
-    ),
-    dict(
-        slug="motion-teaming-lab", category="research", org="University of Maryland, Motion and Teaming Laboratory",
-        title="Intern",
-        dates="Placeholder dates", location="College Park, MD",
-        lede="Placeholder one-sentence summary of the lab's focus and your role.",
-        overview="Replace with context on the lab's research area (e.g. robotics, human-robot teaming) and where your work fit in.",
-        what_i_did="Replace with specifics: hardware built, code written, experiments run, or data collected.",
-        tools_prose="Replace with the specific tools/software/languages you used.",
-        outcome="Replace with the result: a working system, a finding, or a contribution to an ongoing project.",
-        tags=["Robotics", "Systems"],
-        links=[("Lab site", "#")],
     ),
     dict(
         slug="formula-sae", category="leadership", org="Illini Electric Motorsports, Formula SAE",

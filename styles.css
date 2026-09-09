@@ -227,12 +227,13 @@ h1, h2, h3, h4 {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-top: var(--nav-h);
+  padding-top: calc(var(--nav-h) + 4.5rem);
+  padding-bottom: 5rem;
   position: relative;
   overflow: hidden;
 }
 
-.hero-inner { max-width: 780px; }
+.hero-inner { max-width: 860px; }
 
 .hero-kicker {
   font-size: 0.95rem;
@@ -243,15 +244,16 @@ h1, h2, h3, h4 {
 }
 
 .hero h1 {
-  font-size: clamp(2.6rem, 6.5vw, 4.6rem);
-  margin-bottom: 1.4rem;
+  font-size: clamp(2.35rem, 5.2vw, 3.9rem);
+  margin-bottom: 1.5rem;
 }
 
 .hero p {
-  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  font-size: clamp(1.02rem, 1.5vw, 1.18rem);
+  line-height: 1.6;
   color: var(--text-muted);
-  max-width: 620px;
-  margin-bottom: 2.2rem;
+  max-width: 660px;
+  margin-bottom: 2.4rem;
 }
 
 .hero-actions {
@@ -337,6 +339,94 @@ section.tight { padding: 4rem 0; }
 }
 .card:hover .card-link svg { transform: translateX(4px); }
 .card-link svg { transition: transform 0.3s var(--ease); }
+
+/* ---------- Card skills carousel ----------
+   Skill chips under each home-page card. JS (script.js) measures the chips,
+   groups them into single-line "pages" that fit the card, and cross-fades
+   between the pages on a timer, pausing on hover/focus, when the card is off
+   screen, and when the tab is hidden. With JS off (or reduced motion) the
+   chips simply wrap and all stay visible. ---------- */
+
+.card-skills {
+  margin: 0 0 1.3rem;
+  padding-top: 1.05rem;
+  border-top: 1px solid var(--border);
+}
+
+.card-skills-label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.65rem;
+}
+
+.skill-track {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.skill-chip {
+  font-size: 0.75rem;
+  line-height: 1.35;
+  padding: 0.3rem 0.7rem;
+  border-radius: 980px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* JS switches the track into a stack of single-line pages */
+.skill-track.is-carousel {
+  display: grid;
+  grid-template-columns: 1fr;
+  overflow: hidden;
+}
+
+.skill-page {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.4rem;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity 0.55s var(--ease), transform 0.55s var(--ease);
+  pointer-events: none;
+}
+
+.skill-page.is-current {
+  opacity: 1;
+  transform: none;
+}
+
+.skill-dots {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 0.75rem;
+  height: 5px;
+}
+
+.skill-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 980px;
+  background: var(--gray-200);
+  transition: width 0.45s var(--ease), background 0.45s var(--ease);
+}
+
+.skill-dot.is-current {
+  width: 15px;
+  background: var(--accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  .skill-dot { background: #3a3a40; }
+}
 
 /* ---------- Reveal-on-scroll ---------- */
 
