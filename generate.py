@@ -276,14 +276,31 @@ EXPERIENCE = [
     ),
     dict(
         slug="midwest-nice", category="research", org="University of Illinois, Midwest NICE Aerospace Engineering Group",
-        title="Undergraduate Researcher",
-        dates="Placeholder dates", location="Urbana-Champaign, IL",
-        lede="Placeholder one-sentence summary of the research focus and your role in it.",
-        overview="Replace with context on the group's research area and the specific question your work addressed.",
-        what_i_did="Replace with specifics: experiments run, models built, data collected/analyzed, or hardware built and tested.",
-        tools_prose="Replace with the specific simulation, data-analysis, or lab tools/software you used.",
-        outcome="Replace with the result: a finding, a working prototype, a paper/poster, or a dataset that advanced the project.",
-        tags=["Research", "Data Analysis"],
+        title="Undergraduate Research Assistant — Drone-LiDAR-CFD Greenhouse Fertigation Study",
+        filled=True,
+        dates="August 2026 – Present", location="Urbana-Champaign, IL",
+        lede="Supporting an AE 497 research project (led by Pratham Rao Puskur) that is developing a drone-based LiDAR and CFD workflow to diagnose fertigation non-uniformity in a deep winter greenhouse, focused on higher-fidelity CAD modeling and CFD simulation of the greenhouse airflow.",
+        note="This project is ongoing (started August 2026). The descriptions below reflect the current research plan — what the project is set up to investigate and my role in it — rather than completed results, and will be updated as the work and any findings develop.",
+        media=[
+            ("../assets/midwest-nice/deep-winter-greenhouse-render.png",
+             "Rendered CAD concept of a deep winter greenhouse with a steep, south-facing double-glazed glass wall",
+             "Concept render of the deep winter greenhouse design the project is modeling — a passive-solar structure with a steep, south-facing glazed wall for heat retention through winter."),
+        ],
+        overview=(
+            "Greenhouse fertilizer delivery is usually coupled directly to irrigation (fertigation), which means emitter clogging, pressure imbalance, drainage irregularity, and uneven greenhouse airflow can all cause nutrient delivery to vary spatially even when the nominal nutrient recipe is correct. The Midwest NICE group's project, led by Pratham Rao Puskur, is investigating whether a drone equipped with LiDAR can serve as a mobile sensing platform inside a deep winter greenhouse: mapping canopy and structural geometry accurately enough to feed a computational fluid dynamics (CFD) model of the greenhouse's internal airflow, and using that combination to flag likely dry spots, weak-growth zones, stagnant regions, and other delivery-related anomalies for closer inspection. I joined the project in August 2026 as the AE 298 undergraduate research assistant, brought on specifically to push the CAD and CFD side of the workflow to a higher standard than the initial models."
+        ),
+        what_i_did=(
+            "My focus is on the two pieces the project identified as needing the most work: building a CAD model of the deep winter greenhouse that faithfully preserves its real geometry (roof shape, ridge and eave height, roll-up side vents, hinged ridge vents, row spacing and aisles) rather than a symbolic approximation, and running the CFD studies on top of it. The plan follows a staged sequence: first mapping the existing greenhouse and validating LiDAR accuracy against known targets and manual plant measurements, then measuring the baseline airflow field with the drone absent to avoid propeller-downwash contamination, and building a baseline CFD model validated against anemometer measurements before comparing candidate airflow layouts.</p>\n      "
+            "<p>From there, the workflow calls for comparing four CAD-modeled airflow layouts under matched boundary conditions &mdash; the existing baseline, a cross-flow arrangement, a side-inlet/ridge-outlet arrangement, and a fan- or baffle-assisted layout &mdash; changing one design variable at a time while holding the greenhouse envelope constant, and evaluating them on canopy-zone uniformity and stagnant volume rather than bulk air exchange alone. Only after a layout is selected and the CFD model is validated does the plan move on to tracer-droplet deposition testing and, eventually, feasibility testing with actual nutrient-containing droplets.</p>\n      "
+            "<p>Because the LiDAR-derived canopy geometry will eventually feed directly into the CFD domain (as a measured canopy envelope or a porous zone with experimentally supported drag properties), the CAD and CFD work is being built with that hand-off in mind from the start, rather than as a standalone geometry exercise."
+        ),
+        tools_prose=(
+            "Building CAD models of the greenhouse envelope, vents, and crop rows, and setting up and running the corresponding CFD simulations, including mesh-independence testing across coarse, medium, and fine grids and near-wall mesh sizing based on a target dimensionless wall distance (y⁺), following the SST k-ω turbulence model identified in the project's literature review as best matched to prior validated greenhouse CFD studies."
+        ),
+        outcome=(
+            "This work is in progress. Pratham's target for the project is an AIAA Journal submission; my contributions so far are the higher-fidelity CAD models and CFD simulation runs the project needed, with results to be added here as the staged experimental sequence (LiDAR validation, baseline CFD validation, layout comparison, and eventually droplet-transport testing) is carried out."
+        ),
+        tags=["CFD", "CAD Modeling", "LiDAR", "Airflow Simulation", "Greenhouse Systems"],
         links=[("Research group site", "#")],
     ),
     dict(
