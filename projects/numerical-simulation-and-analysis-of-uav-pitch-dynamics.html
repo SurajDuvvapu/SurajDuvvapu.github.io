@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A Numerical Simulation and Analysis of UAV Pitch Dynamics, Numerical Methods | Suraj Duvvapu</title>
+<meta name="description" content="Built a fourth-order Runge-Kutta simulation of UAV pitch dynamics to study how damping, stiffness, and inertia shape the transient response, then compared an open-loop step input against a PD controller and verified the numerical method with a full convergence study." />
+<link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container">
+    <a href="../index.html" class="nav-logo">Suraj Duvvapu</a>
+    <ul class="nav-links">
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#work">Work</a></li>
+      <li><a href="../index.html#research">Research</a></li>
+      <li><a href="../index.html#leadership">Leadership</a></li>
+      <li><a href="../index.html#projects">Projects</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</nav>
+
+<header class="detail-hero">
+  <div class="container">
+    <div class="breadcrumb reveal">
+      <a href="../index.html">Home</a> &rsaquo; <a href="../index.html#projects">Projects</a> &rsaquo; Numerical Methods
+    </div>
+    <span class="eyebrow reveal">Projects</span>
+    <h1 class="detail-title reveal">A Numerical Simulation and Analysis of UAV Pitch Dynamics</h1>
+    <p class="detail-lede reveal">Built a fourth-order Runge-Kutta simulation of UAV pitch dynamics to study how damping, stiffness, and inertia shape the transient response, then compared an open-loop step input against a PD controller and verified the numerical method with a full convergence study.</p>
+    
+    <div class="detail-meta reveal">
+      <span><strong>Organization</strong> &nbsp;Numerical Methods</span>
+      <span><strong>Dates</strong> &nbsp;Spring 2025</span>
+      <span><strong>Location</strong> &nbsp;University of Illinois</span>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="media-gallery reveal">
+    <figure>
+      <div class="media-thumb">
+        <img src="../assets/uav-pitch-dynamics/phase-portraits.png" alt="Phase portraits of pitch angle versus pitch rate for under-damped, critically damped, and overdamped cases" loading="lazy" />
+      </div>
+      <figcaption>Phase portraits of pitch angle versus pitch rate for three damping cases: the under-damped case spirals around the origin, the critically damped case cuts straight to it, and the overdamped case creeps in without oscillating.</figcaption>
+    </figure>
+    <figure>
+      <div class="media-thumb">
+        <img src="../assets/uav-pitch-dynamics/step-vs-pd-control.png" alt="Comparison of pitch angle response using an open-loop step input versus a PD controller" loading="lazy" />
+      </div>
+      <figcaption>Step input versus PD control: the PD controller settles the pitch angle faster and with far less overshoot than the open-loop step response.</figcaption>
+    </figure>
+    <figure>
+      <div class="media-thumb">
+        <img src="../assets/uav-pitch-dynamics/convergence-study.png" alt="Log-log plot of absolute error versus time step showing fourth-order convergence with a measured slope of 4.02" loading="lazy" />
+      </div>
+      <figcaption>Error-convergence study for the RK4 implementation: a log-log slope of 4.02 confirms the expected fourth-order global error.</figcaption>
+    </figure>
+  </div>
+
+  <div class="detail-grid">
+    <article class="prose">
+      <h2>Overview</h2>
+      <p>Pitch is the axis that governs a UAV&rsquo;s climb and descent, and how well a vehicle damps out pitch disturbances is a direct driver of stability, maneuverability, and safety. This project modeled UAV pitch motion as a single second-order ODE in the pitch angle, driven by inertia, aerodynamic stiffness, damping, and an external control moment, and used it to study two questions: how do the physical parameters (inertia, stiffness, and especially damping) shape the transient pitch response, and how much better does an active feedback controller do at rejecting that response than simply forcing a fixed input and waiting it out. Answering both meant building a numerical integrator accurate enough to trust, then using it to sweep across damping regimes and controller types.</p>
+
+      <h2>What I did</h2>
+      <p>I rewrote the second-order pitch equation as a first-order system in the state vector [&theta;, q] (pitch angle and pitch rate) and integrated it with a fourth-order Runge-Kutta (RK4) scheme, which combines four slope evaluations per step to cancel out lower-order error terms and reach a global error of O(&Delta;t&#8308;). Before trusting the integrator on the full problem, I validated it against the closed-form analytical solution of the homogeneous damped oscillator (zero control input, a known initial condition, and the standard underdamped solution in terms of the natural and damped frequencies). Running the same homogeneous case across a range of time steps and plotting the absolute error against &Delta;t on a log-log scale gave a measured slope of 4.02, matching RK4&rsquo;s theoretical fourth-order convergence almost exactly and confirming the implementation was correct rather than just plausible-looking.</p>
+      <figure class="report-figure figure-pair">
+      <div class="figure-media"><div><img src="../assets/uav-pitch-dynamics/convergence-study.png" alt="Convergence study" loading="lazy" /><div class="figure-sublabel">Convergence study</div></div><div><img src="../assets/uav-pitch-dynamics/numerical-vs-analytical.png" alt="Numerical vs. analytical" loading="lazy" /><div class="figure-sublabel">Numerical vs. analytical</div></div></div>
+      <figcaption>Left: log-log error-convergence study giving a measured slope of 4.02, matching the theoretical fourth-order global error of RK4. Right: the RK4 solution overlaid on the closed-form analytical solution for the homogeneous case, essentially indistinguishable at &Delta;t = 0.01.</figcaption>
+    </figure>
+      <p>With the integrator validated, I checked how coarse a time step could get away with staying accurate by comparing runs at &Delta;t = 0.005, 0.015, and 0.03: all three tracked each other closely, indicating that anything at or below roughly 0.03 s was a safe choice for this system. I still ran the main study at &Delta;t = 0.001 for extra margin, over a 6-second window with the moment of inertia and stiffness held fixed and the damping coefficient swept across several values to move the system between under-damped, critically damped, and overdamped behavior.</p>
+      <figure class="report-figure">
+      <div class="figure-media"><div><img src="../assets/uav-pitch-dynamics/time-step-comparison.png" alt="Pitch-angle response at three different time steps (0.005, 0.015, and 0.03 s): the curves overlay almost exactly, confirming the chosen step size was well within the stable, accurate range." loading="lazy" /></div></div>
+      <figcaption>Pitch-angle response at three different time steps (0.005, 0.015, and 0.03 s): the curves overlay almost exactly, confirming the chosen step size was well within the stable, accurate range.</figcaption>
+    </figure>
+      <p>Applying a step input at t = 2 s and sweeping the damping coefficient reproduced the classic second-order response families directly: at low damping the pitch angle overshoots substantially and oscillates with slowly decaying amplitude, at the critical damping value it returns to equilibrium in one smooth motion with no overshoot, and at high damping it approaches equilibrium monotonically but noticeably more slowly. That progression matches the theoretical overshoot relationship OS &asymp; exp(&minus;&zeta;&pi;/&radic;(1&minus;&zeta;&sup2;)) in terms of the damping ratio &zeta; = c/(2&radic;(I<sub>yy</sub>k)), where &zeta; &lt; 1 is under-damped, &zeta; = 1 is critical, and &zeta; &gt; 1 is overdamped.</p>
+      <figure class="report-figure">
+      <div class="figure-media"><div><img src="../assets/uav-pitch-dynamics/step-response-damping-cases.png" alt="Pitch-angle response to a step input at t = 2 s for three damping values: pronounced overshoot and oscillation at low damping, a single smooth return at critical damping, and a slower monotonic approach at high damping." loading="lazy" /></div></div>
+      <figcaption>Pitch-angle response to a step input at t = 2 s for three damping values: pronounced overshoot and oscillation at low damping, a single smooth return at critical damping, and a slower monotonic approach at high damping.</figcaption>
+    </figure>
+      <p>The phase portraits (pitch angle plotted against pitch rate) make the same story visual: the under-damped trajectory spirals around the origin and, in the undamped limit, would circle forever, the critically damped trajectory cuts almost directly to the origin, and the overdamped trajectory creeps in along a slow arc with no oscillation. These are exactly the behaviors a feedback controller has to manage, and they made clear that under-damped response is the regime to actively suppress.</p>
+      <figure class="report-figure">
+      <div class="figure-media"><div><img src="../assets/uav-pitch-dynamics/phase-portraits.png" alt="Phase portraits of pitch angle versus pitch rate for the same three damping cases: the under-damped trajectory spirals repeatedly, the critically damped one heads almost straight to the origin, and the overdamped one creeps in without crossing it." loading="lazy" /></div></div>
+      <figcaption>Phase portraits of pitch angle versus pitch rate for the same three damping cases: the under-damped trajectory spirals repeatedly, the critically damped one heads almost straight to the origin, and the overdamped one creeps in without crossing it.</figcaption>
+    </figure>
+      <p>Finally, I compared the open-loop step input against a proportional-derivative controller, u(t) = &minus;K<sub>p</sub>&theta;(t) &minus; K<sub>d</sub>q(t) with K<sub>p</sub> = 4.0 and K<sub>d</sub> = 1.0, continuously correcting the control moment based on both the current pitch error and its rate of change rather than applying one fixed input and waiting. The PD-controlled response converged to equilibrium markedly faster than the step response, with substantially less overshoot and almost no residual oscillation, which is the practical payoff of feedback: it actively counteracts the system&rsquo;s own momentum instead of just forcing it and hoping the natural damping handles the rest.</p>
+      <figure class="report-figure">
+      <div class="figure-media"><div><img src="../assets/uav-pitch-dynamics/step-vs-pd-control.png" alt="Step input versus PD control on the same system: the PD controller reaches equilibrium faster, with far less overshoot and almost no lingering oscillation." loading="lazy" /></div></div>
+      <figcaption>Step input versus PD control on the same system: the PD controller reaches equilibrium faster, with far less overshoot and almost no lingering oscillation.</figcaption>
+    </figure>
+      <p>Taken together, the results tied a validated fourth-order numerical method to a clear physical story: damping governs the shape of the transient response exactly as the analytical overshoot formula predicts, and active feedback beats an open-loop input at every damping level by directly counteracting the system&rsquo;s motion instead of just exciting it and waiting.</p>
+
+      <h2>Tools &amp; methods</h2>
+      <p>Implemented the RK4 integrator, the step and PD control laws, and the analytical validation case from scratch in Python with NumPy, and used Matplotlib for every time-series plot, phase portrait, and the log-log convergence study.</p>
+
+      <h2>Outcome</h2>
+      <p>Ended up with an RK4 integrator whose measured convergence order (4.02) matched theory almost exactly, a clear demonstration of how the damping ratio moves the pitch response between under-damped, critically damped, and overdamped behavior consistent with the analytical overshoot formula, and a direct, quantified comparison showing the PD controller reaching equilibrium faster and with far less overshoot than an open-loop step input.</p>
+    </article>
+
+    <aside class="sidebar reveal">
+      <h3>Skills &amp; tools</h3>
+      <div class="tag-list">
+        <span class="tag">Python</span>
+        <span class="tag">NumPy</span>
+        <span class="tag">Numerical Methods</span>
+        <span class="tag">Runge-Kutta (RK4)</span>
+        <span class="tag">Dynamics &amp; Control</span>
+        <span class="tag">PD Control</span>
+      </div>
+      
+    </aside>
+  </div>
+
+  <div class="detail-nav">
+    <a href="reaction-wheel-attitude-control-with-star-tracker.html" class="link-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="transform: scaleX(-1);"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>&nbsp;Aerospace Control Systems</a>
+    <a href="../index.html#projects" class="link-arrow">Back to all projects</a>
+    <a href="2d-thermal-finite-element-solver.html" class="link-arrow">Finite Element Analysis&nbsp;<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+</div>
+
+<footer class="footer" id="contact">
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <h3 class="footer-heading">Let&rsquo;s talk engineering.</h3>
+        <p class="text-muted mt-0">Open to new grad and internship opportunities in mechanical &amp; aerospace engineering.</p>
+      </div>
+      <div class="footer-links">
+        <a href="mailto:duvvapu2@illinois.edu">Email</a>
+        <a href="https://www.linkedin.com/in/suraj-duvvapu-634833288/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/SurajDuvvapu" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span id="year"></span> Suraj Duvvapu</span>
+      <span>Built with plain HTML, CSS &amp; JS &middot; Deployed on GitHub Pages</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../script.js"></script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

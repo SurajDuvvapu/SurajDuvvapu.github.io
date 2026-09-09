@@ -630,14 +630,56 @@ PROJECTS = [
         links=[],
     ),
     dict(
-        slug="ae370-final-project", category="projects", org="AE 370: Numerical Methods", title="AE 370 Final Project",
-        dates="Placeholder dates", location="University of Illinois",
-        lede="Placeholder one-sentence summary of the numerical method implemented and the problem it solved.",
-        overview="Replace with the problem statement and why a numerical approach was needed.",
-        what_i_did="Replace with specifics: the numerical scheme implemented, discretization, verification/validation approach.",
-        tools_prose="Replace with the specific language/libraries used (e.g. Python, NumPy).",
-        outcome="Replace with the result: accuracy achieved, convergence behavior, or comparison to analytical/experimental results.",
-        tags=["Numerical Methods", "Simulation"],
+        slug="numerical-simulation-and-analysis-of-uav-pitch-dynamics", category="projects", org="Numerical Methods", title="A Numerical Simulation and Analysis of UAV Pitch Dynamics",
+        filled=True,
+        dates="Spring 2025", location="University of Illinois",
+        lede="Built a fourth-order Runge-Kutta simulation of UAV pitch dynamics to study how damping, stiffness, and inertia shape the transient response, then compared an open-loop step input against a PD controller and verified the numerical method with a full convergence study.",
+        media=[
+            ("../assets/uav-pitch-dynamics/phase-portraits.png",
+             "Phase portraits of pitch angle versus pitch rate for under-damped, critically damped, and overdamped cases",
+             "Phase portraits of pitch angle versus pitch rate for three damping cases: the under-damped case spirals around the origin, the critically damped case cuts straight to it, and the overdamped case creeps in without oscillating."),
+            ("../assets/uav-pitch-dynamics/step-vs-pd-control.png",
+             "Comparison of pitch angle response using an open-loop step input versus a PD controller",
+             "Step input versus PD control: the PD controller settles the pitch angle faster and with far less overshoot than the open-loop step response."),
+            ("../assets/uav-pitch-dynamics/convergence-study.png",
+             "Log-log plot of absolute error versus time step showing fourth-order convergence with a measured slope of 4.02",
+             "Error-convergence study for the RK4 implementation: a log-log slope of 4.02 confirms the expected fourth-order global error."),
+        ],
+        overview="Pitch is the axis that governs a UAV&rsquo;s climb and descent, and how well a vehicle damps out pitch disturbances is a direct driver of stability, maneuverability, and safety. This project modeled UAV pitch motion as a single second-order ODE in the pitch angle, driven by inertia, aerodynamic stiffness, damping, and an external control moment, and used it to study two questions: how do the physical parameters (inertia, stiffness, and especially damping) shape the transient pitch response, and how much better does an active feedback controller do at rejecting that response than simply forcing a fixed input and waiting it out. Answering both meant building a numerical integrator accurate enough to trust, then using it to sweep across damping regimes and controller types.",
+        what_i_did=(
+            "I rewrote the second-order pitch equation as a first-order system in the state vector [&theta;, q] (pitch angle and pitch rate) and integrated it with a fourth-order Runge-Kutta (RK4) scheme, which combines four slope evaluations per step to cancel out lower-order error terms and reach a global error of O(&Delta;t&#8308;). Before trusting the integrator on the full problem, I validated it against the closed-form analytical solution of the homogeneous damped oscillator (zero control input, a known initial condition, and the standard underdamped solution in terms of the natural and damped frequencies). Running the same homogeneous case across a range of time steps and plotting the absolute error against &Delta;t on a log-log scale gave a measured slope of 4.02, matching RK4&rsquo;s theoretical fourth-order convergence almost exactly and confirming the implementation was correct rather than just plausible-looking.</p>\n      "
+            + report_figure(
+                [
+                    ("../assets/uav-pitch-dynamics/convergence-study.png", "Convergence study"),
+                    ("../assets/uav-pitch-dynamics/numerical-vs-analytical.png", "Numerical vs. analytical"),
+                ],
+                "Left: log-log error-convergence study giving a measured slope of 4.02, matching the theoretical fourth-order global error of RK4. Right: the RK4 solution overlaid on the closed-form analytical solution for the homogeneous case, essentially indistinguishable at &Delta;t = 0.01.",
+            )
+            + "\n      <p>With the integrator validated, I checked how coarse a time step could get away with staying accurate by comparing runs at &Delta;t = 0.005, 0.015, and 0.03: all three tracked each other closely, indicating that anything at or below roughly 0.03 s was a safe choice for this system. I still ran the main study at &Delta;t = 0.001 for extra margin, over a 6-second window with the moment of inertia and stiffness held fixed and the damping coefficient swept across several values to move the system between under-damped, critically damped, and overdamped behavior.</p>\n      "
+            + report_figure(
+                [("../assets/uav-pitch-dynamics/time-step-comparison.png", None)],
+                "Pitch-angle response at three different time steps (0.005, 0.015, and 0.03 s): the curves overlay almost exactly, confirming the chosen step size was well within the stable, accurate range.",
+            )
+            + "\n      <p>Applying a step input at t = 2 s and sweeping the damping coefficient reproduced the classic second-order response families directly: at low damping the pitch angle overshoots substantially and oscillates with slowly decaying amplitude, at the critical damping value it returns to equilibrium in one smooth motion with no overshoot, and at high damping it approaches equilibrium monotonically but noticeably more slowly. That progression matches the theoretical overshoot relationship OS &asymp; exp(&minus;&zeta;&pi;/&radic;(1&minus;&zeta;&sup2;)) in terms of the damping ratio &zeta; = c/(2&radic;(I<sub>yy</sub>k)), where &zeta; &lt; 1 is under-damped, &zeta; = 1 is critical, and &zeta; &gt; 1 is overdamped.</p>\n      "
+            + report_figure(
+                [("../assets/uav-pitch-dynamics/step-response-damping-cases.png", None)],
+                "Pitch-angle response to a step input at t = 2 s for three damping values: pronounced overshoot and oscillation at low damping, a single smooth return at critical damping, and a slower monotonic approach at high damping.",
+            )
+            + "\n      <p>The phase portraits (pitch angle plotted against pitch rate) make the same story visual: the under-damped trajectory spirals around the origin and, in the undamped limit, would circle forever, the critically damped trajectory cuts almost directly to the origin, and the overdamped trajectory creeps in along a slow arc with no oscillation. These are exactly the behaviors a feedback controller has to manage, and they made clear that under-damped response is the regime to actively suppress.</p>\n      "
+            + report_figure(
+                [("../assets/uav-pitch-dynamics/phase-portraits.png", None)],
+                "Phase portraits of pitch angle versus pitch rate for the same three damping cases: the under-damped trajectory spirals repeatedly, the critically damped one heads almost straight to the origin, and the overdamped one creeps in without crossing it.",
+            )
+            + "\n      <p>Finally, I compared the open-loop step input against a proportional-derivative controller, u(t) = &minus;K<sub>p</sub>&theta;(t) &minus; K<sub>d</sub>q(t) with K<sub>p</sub> = 4.0 and K<sub>d</sub> = 1.0, continuously correcting the control moment based on both the current pitch error and its rate of change rather than applying one fixed input and waiting. The PD-controlled response converged to equilibrium markedly faster than the step response, with substantially less overshoot and almost no residual oscillation, which is the practical payoff of feedback: it actively counteracts the system&rsquo;s own momentum instead of just forcing it and hoping the natural damping handles the rest.</p>\n      "
+            + report_figure(
+                [("../assets/uav-pitch-dynamics/step-vs-pd-control.png", None)],
+                "Step input versus PD control on the same system: the PD controller reaches equilibrium faster, with far less overshoot and almost no lingering oscillation.",
+            )
+            + "\n      <p>Taken together, the results tied a validated fourth-order numerical method to a clear physical story: damping governs the shape of the transient response exactly as the analytical overshoot formula predicts, and active feedback beats an open-loop input at every damping level by directly counteracting the system&rsquo;s motion instead of just exciting it and waiting."
+        ),
+        tools_prose="Implemented the RK4 integrator, the step and PD control laws, and the analytical validation case from scratch in Python with NumPy, and used Matplotlib for every time-series plot, phase portrait, and the log-log convergence study.",
+        outcome="Ended up with an RK4 integrator whose measured convergence order (4.02) matched theory almost exactly, a clear demonstration of how the damping ratio moves the pitch response between under-damped, critically damped, and overdamped behavior consistent with the analytical overshoot formula, and a direct, quantified comparison showing the PD controller reaching equilibrium faster and with far less overshoot than an open-loop step input.",
+        tags=["Python", "NumPy", "Numerical Methods", "Runge-Kutta (RK4)", "Dynamics &amp; Control", "PD Control"],
         links=[],
     ),
 ]
