@@ -305,14 +305,96 @@ EXPERIENCE = [
     ),
     dict(
         slug="baur-research-group", category="research", org="University of Illinois, Baur Research Group",
-        title="Undergraduate Researcher",
-        dates="Placeholder dates", location="Urbana-Champaign, IL",
-        lede="Placeholder one-sentence summary of the research focus and your role in it.",
-        overview="Replace with context on the lab's research area (e.g. structures/materials) and the specific question your work addressed.",
-        what_i_did="Replace with specifics: specimens fabricated or tested, simulations run, or analysis performed.",
-        tools_prose="Replace with the specific fabrication, testing, or simulation tools/software you used.",
-        outcome="Replace with the result: a finding, a working test setup, or data that advanced the project.",
-        tags=["Research", "Materials/Structures"],
+        title="Undergraduate Researcher — Vascular Composites and X-Ray CT Void Segmentation",
+        filled=True,
+        dates="August 2024 – June 2025", location="Champaign, IL",
+        lede="Manufactured vascular ceramic-matrix composites and built a streamlined X-ray CT segmentation workflow — deep learning in Dragonfly plus Python image analysis — to characterize voids in both impact-damaged composites and vascular channels.",
+        note="Much of the work described here is documented in my AE 397 independent-study paper, &ldquo;Characterizing Voids in Composites Through X-Ray CT.&rdquo; Ivan Wu, Hanseung Lee, and Prof. Jeff Baur advised the work; the impact-test figure in the banner is from Ivan Wu's side of the damaged-composite project.",
+        media=[
+            ("../assets/baur-research/impact-damage-process.png",
+             "Impactor striking a clamped composite laminate, alongside photographs of specimens impacted at 5 J, 10 J, 20 J, and 50 J",
+             "Impact testing of pDCPD-based composite laminates at 5&nbsp;J, 10&nbsp;J, 20&nbsp;J, and 50&nbsp;J — the samples whose internal delamination I characterized by X-ray CT. (Figure from Ivan Wu.)"),
+            ("../assets/baur-research/delamination-3d.png",
+             "Three-dimensional rendering of a composite laminate with the segmented delamination highlighted in yellow through its mid-plane",
+             "Segmented delamination inside the 10&nbsp;J impacted laminate, rendered in 3D from ~1,000 CT slices after deep-learning segmentation and manual cleanup."),
+            ("../assets/baur-research/channel-3d.png",
+             "Three-dimensional rendering of a segmented vascular channel running through a ceramic-matrix composite",
+             "A single vascular channel segmented out of a ceramic-matrix composite — the geometry I analyzed for radius consistency and displacement through the PIP cycle."),
+        ],
+        overview=(
+            "The Baur research group works on composite structures for aerospace, and while I was there two of its projects converged on the same unsolved problem. The first concerned space debris: as low Earth orbit and medium Earth orbit get more crowded, high-speed impacts on orbiting and launching spacecraft are becoming more common, and those impacts leave internal structural damage such as delamination. The group was using thermographic scanning to identify that damage, but needed ground-truth volumes to compare the thermography against. The second project concerned vascular channels embedded inside ceramic-matrix composites (CMCs) — hollow passages that serve first as a path for resin during manufacturing and later as a coolant path in the leading edge of a high-speed aircraft.</p>\n      "
+            "<p>Both projects hinge on accurately characterizing a void: delamination in the impacted laminates, and the channel itself in the CMCs. Both were being measured with X-ray CT, and in both cases the segmentation — deciding, slice by slice, which pixels are void and which are material — was the bottleneck. My work over the year was to fabricate and test the vascular composites, and to develop a streamlined segmentation and analysis pipeline that could turn a thousand-slice CT stack into usable numbers for either project."
+        ),
+        what_i_did=(
+            "<strong>Manufacturing and testing vascular composites.</strong> On the CMC side I helped develop a method for building vascular channels by pairing CF3D printing with 3D-printed sacrificial filament rods embedded into the material. The rod is burned out and the composite then goes through the standard polymer infiltration and pyrolysis (PIP) process — resin infiltration, curing, and pyrolysis, repeated with curing at progressively higher temperatures. X-ray CT scans after both infiltration and pyrolysis let me confirm the channel survived; the method reached roughly an 80% success rate for producing an intact channel. I also ran uniaxial tensile and double cantilever beam (DCB) tests on the resulting composites to characterize their mechanical properties, so the manufacturing method could be evaluated on strength and interlaminar fracture toughness rather than geometry alone.</p>\n      "
+            "<p><strong>Getting CT data into a usable state.</strong> Each scan produced roughly 800–1,200 TIFF slices, and many of them came out too dark or too flat in contrast to be usable in Dragonfly, the image-processing software the lab uses. I built an ImageJ preprocessing routine that cropped away the unnecessary portions of each frame, converted the stack from 16-bit to 8-bit, and adjusted brightness, contrast, and thresholding just far enough to bring the grain boundaries back while keeping the images continuous-toned rather than binary. That cut file sizes substantially and made the stacks fast enough to work with.</p>\n      "
+            + report_figure(
+                [("../assets/baur-research/ct-slice-raw.png", None)],
+                "Figure 1: Slice 451 of the 10&nbsp;J impacted laminate straight from the scanner. Frames like this one are nearly single-toned and unusable for segmentation until the stack is cropped and re-scaled.",
+            )
+            + "\n      <p><strong>Training the deep learning segmentation.</strong> In Dragonfly I manually segmented five to eight slices per sample as training data, coloring each region of interest (ROI). My first pass used three ROIs — void, composite, and air — and it failed in a specific and instructive way: scanning artifacts made patches of intact composite read as void, so the trained model propagated those misclassifications across the whole stack. Adding a fourth ROI, which I labeled &ldquo;composites that look like void,&rdquo; gave the model an explicit class for the artifact signature and sharply improved its accuracy.</p>\n      "
+            + report_figure(
+                [("../assets/baur-research/segmentation-artifacts.png", "Three-ROI segmentation: scan artifacts inside the composite are picked up as void (yellow)"),
+                 ("../assets/baur-research/segmentation-improved.png", "Four-ROI segmentation: the added &ldquo;looks like void&rdquo; class (purple) separates artifacts from real delamination")],
+                "Figure 2: The ROI change that fixed the model. Giving the artifact regions their own class stopped the network from labeling sound composite as void.",
+            )
+            + "\n      <p>I trained a U-Net semantic segmentation model on those slices, tuning the parameters by trial until the results held up across the stack: a patch size of 128 pixels, a batch size of 32, and an augmentation factor of 3. Trained this way, the model segmented CMC laminates across varying image quality and deformation levels at roughly 98% accuracy. The residual errors were mostly along ROI edges, and I cleaned those up with morphological operations — dilate, erode, open, and close — before exporting the final void dataset.</p>\n      "
+            + report_figure(
+                [("../assets/baur-research/ct-slice-processed.png", "Slice 451 after cropping and 8-bit contrast adjustment in ImageJ"),
+                 ("../assets/baur-research/final-segmentation-slice.png", "The same slice after deep-learning inference and morphological cleanup")],
+                "Figure 3: The same slice as Figure 1, once it has been through the full pipeline &mdash; preprocessed in ImageJ, then segmented &mdash; across the 98.46&nbsp;mm width of the scan.",
+            )
+            + "\n      <p><strong>Segmenting the vascular channels.</strong> The same deep learning approach did not transfer to the channel project. Because the channel occupies only a very small fraction of each slice, the patch-to-batch ratio that worked for delamination could not capture enough context, and the model would classify an entire slice as either void or composite. Rather than force it, I switched to Dragonfly's interpolation tool: manually segmenting about one tenth of the slices and extrapolating across the rest by tracking how the defined ROIs evolve through the stack, then post-processing with manual corrections and an island-removal pass that clears pixel clusters of five or fewer.</p>\n      "
+            + report_figure(
+                [("../assets/baur-research/channel-slice-segmentation.png", "Segmented channel cross-section in a single CT slice of the A2 Sac sample"),
+                 ("../assets/baur-research/askew-channel.png", "A channel that drifted off-axis during manufacturing (D2 PLA initial burnout)")],
+                "Figure 4: A segmented channel cross-section, and an example of a channel running askew through the composite — the reason I referenced my geometry calculations to each slice's center of mass rather than to the channel axis.",
+            )
+            + "\n      <p><strong>Python image analysis.</strong> With segmentations in hand, I wrote Python tooling to turn them into measurements. For the damaged composites, I exported the void regions from Dragonfly as a series of binary images, loaded them with cv2 into a 3D array (white pixels as 1, black as 0), and summed along the through-thickness axis to produce top-down heat maps of delamination depth with matplotlib, along with the projected area of the damage. These heat maps are what the group's thermographic scans get compared against, since thermography also sees the composite from the top down.</p>\n      "
+            + "<p>For the channels, the goal was to quantify how circular and how straight they stayed through the PIP process. The code first screened each binary slice for readability, discarding frames that broke into multiple small islands and would have skewed the statistics. For each surviving slice it found the center of mass and measured the distance to the channel edge at every degree, averaging those radii across all slices to build a radial plot. I deliberately used the center of mass rather than the channel's nominal axis as the reference point: the axis does not pass through the channel in every slice of every sample, which produces negative radii, and measuring a circle's curvature from any point but its center gives non-constant radii by construction. To capture displacement, which the radial plots miss, I defined an axis between the centers of mass of the first and last slices and plotted each slice's distance from it.</p>\n      "
+            + report_figure(
+                [("../assets/baur-research/channel-slice-readable.png", "Readable slice — one clean, connected channel cross-section"),
+                 ("../assets/baur-research/channel-slice-unreadable.png", "Unreadable slice — fragmented into islands, excluded from the averages")],
+                "Figure 5: The readability screen. Slices that fragmented into small islands did not represent the channel shape and were filtered out before any geometry was computed.",
+            )
+            + "\n      "
+            + report_figure(
+                [("../assets/baur-research/radial-method.png", "Radius measured from the center of mass at every degree"),
+                 ("../assets/baur-research/displacement-method.png", "Displacement measured from the center of mass to the fitted channel axis")],
+                "Figure 6: The two geometry measurements. Radii at every degree, averaged across slices, describe how circular the channel is; distance from the center of mass to the axis describes how far it wanders.",
+            )
+        ),
+        tools_prose=(
+            "Dragonfly for 3D reconstruction, manual ROI segmentation, U-Net deep learning segmentation, interpolation, and morphological post-processing; ImageJ for CT stack preprocessing (cropping, 16-bit to 8-bit conversion, contrast and threshold adjustment); Python with cv2, NumPy, and matplotlib/pyplot for binary-image analysis, delamination heat maps, projected-area calculation, and the radial and displacement plots; CF3D printing with sacrificial 3D-printed filament rods for vascular channel fabrication; the PIP (polymer infiltration and pyrolysis) process for CMC manufacturing; X-ray CT for validation; and uniaxial tensile and double cantilever beam testing for mechanical characterization."
+        ),
+        outcome=(
+            "The segmentation workflow produced the first consistent void datasets for both projects. On the impacted laminates, delamination volume grew quadratically with impact energy (21.53&nbsp;mm&sup3; at 5&nbsp;J, 117.39&nbsp;mm&sup3; at 10&nbsp;J, 371.59&nbsp;mm&sup3; at 20&nbsp;J, R&sup2;&nbsp;=&nbsp;1) while the projected area grew linearly (228.17, 485.43, and 1072.45&nbsp;mm&sup2;, R&sup2;&nbsp;=&nbsp;0.999). That divergence matters for the group's thermography work: because projected area loses a dimension, it is not sufficient on its own to characterize impact damage, which is exactly the kind of limit the CT ground truth was meant to expose.</p>\n      "
+            + report_figure(
+                [("../assets/baur-research/volume-vs-impact-energy.png", "Delamination volume vs. impact energy — quadratic fit, R&sup2; = 1"),
+                 ("../assets/baur-research/area-vs-impact-energy.png", "Projected delamination area vs. impact energy — linear fit, R&sup2; = 0.999")],
+                "Figure 7: Delamination volume grows quadratically with impact energy while projected area grows linearly, which is why top-down thermographic area alone under-describes the damage.",
+            )
+            + "\n      "
+            + report_figure(
+                [("../assets/baur-research/heatmap-5j.png", "5 J — projected area 228.17 mm&sup2;"),
+                 ("../assets/baur-research/heatmap-10j.png", "10 J — projected area 485.43 mm&sup2;"),
+                 ("../assets/baur-research/heatmap-20j.png", "20 J — projected area 1072.45 mm&sup2;")],
+                "Figure 8: Top-down delamination depth heat maps generated in Python from the segmented void data, at each impact energy — the direct comparison point for the group's thermographic scans.",
+            )
+            + "\n      <p>On the vascular channels, average radius held remarkably steady across every filament type and every stage of the PIP process, at 0.22&ndash;0.23&nbsp;mm. All of those values sat below the 0.25&nbsp;mm the printed rod should have produced, which suggests that using a filament to form the channel slightly shrinks it during printing. Displacement told the more useful story: ABS drifted the most (0.08&nbsp;mm average), while PLA and Sac were essentially equivalent (0.04&ndash;0.05&nbsp;mm), and the radial plots showed PLA producing the most consistent channels — lower standard error at each degree, and closely matching plots between the initial burnout and the standard process.</p>\n      "
+            + report_figure(
+                [("../assets/baur-research/radial-plot-a2-sac.png", "Average channel radius at every degree — A2 Sac initial burnout, 0.22 mm"),
+                 ("../assets/baur-research/displacement-plot-a2-sac.png", "Per-slice displacement from the fitted axis — A2 Sac initial burnout, 0.04 mm average")],
+                "Figure 9: Radial and displacement plots for one sample. Together they separate the two ways a channel can be off-spec: out-of-round, and off-axis.",
+            )
+            + "\n      <p>The workflow's clear limit was large holes. When an impact punched most of the way through the laminate — the 50&nbsp;J samples — the model could not reliably tell void from air, which is understandable given that the two are hard to distinguish by eye as well. So the method holds for impact energies of 20&nbsp;J and below, and standardizing the CT scanning procedure is the prerequisite for pushing past that.</p>\n      "
+            + report_figure(
+                [("../assets/baur-research/segmentation-issue-50j.png", "Segmentation of a 50 J sample, where void and air blur together at the through-hole")],
+                "Figure 10: Where the method breaks down. At 50&nbsp;J the laminate is punched through, and the boundary between void and open air stops being well defined.",
+            )
+            + "\n      <p>I wrote the work up as an independent-study paper, and left the group with a repeatable pipeline rather than a one-off result: preprocessing, a trained segmentation model for damaged laminates, an interpolation-based route for the channels, and Python tooling that turns either into volumes, areas, heat maps, and geometry statistics."
+        ),
+        tags=["X-Ray CT", "Deep Learning Segmentation", "Composites", "Python Image Analysis", "Dragonfly", "Mechanical Testing"],
         links=[("Research group site", "#")],
     ),
     dict(
