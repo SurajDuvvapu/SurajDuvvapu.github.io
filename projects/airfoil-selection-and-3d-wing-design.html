@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Airfoil Selection and 3D Wing Design from Thin Airfoil Theory to XFLR5, Aerodynamics | Suraj Duvvapu</title>
+<meta name="description" content="Worked a fixed-wing design from analytical Thin Airfoil Theory through to a validated 3D tapered wing, comparing three candidate airfoils, pinning down where the theory actually holds against NACA wind tunnel and XFLR5 panel-method data, and sizing elliptical, tapered, and rectangular planforms to pick the one worth building." />
+<link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container">
+    <a href="../index.html" class="nav-logo">Suraj Duvvapu</a>
+    <ul class="nav-links">
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#work">Work</a></li>
+      <li><a href="../index.html#research">Research</a></li>
+      <li><a href="../index.html#leadership">Leadership</a></li>
+      <li><a href="../index.html#projects">Projects</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</nav>
+
+<header class="detail-hero">
+  <div class="container">
+    <div class="breadcrumb reveal">
+      <a href="../index.html">Home</a> &rsaquo; <a href="../index.html#projects">Projects</a> &rsaquo; Aerodynamics
+    </div>
+    <span class="eyebrow reveal">Projects</span>
+    <h1 class="detail-title reveal">Airfoil Selection and 3D Wing Design from Thin Airfoil Theory to XFLR5</h1>
+    <p class="detail-lede reveal">Worked a fixed-wing design from analytical Thin Airfoil Theory through to a validated 3D tapered wing, comparing three candidate airfoils, pinning down where the theory actually holds against NACA wind tunnel and XFLR5 panel-method data, and sizing elliptical, tapered, and rectangular planforms to pick the one worth building.</p>
+    
+    <div class="detail-meta reveal">
+      <span><strong>Organization</strong> &nbsp;Aerodynamics</span>
+      <span><strong>Dates</strong> &nbsp;Fall 2025</span>
+      <span><strong>Location</strong> &nbsp;University of Illinois</span>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="media-gallery reveal">
+    <figure>
+      <div class="media-thumb">
+        <img src="../assets/airfoil-wing-design/tapered-wing-cp-distribution.png" alt="Coefficient of pressure distribution over the 3D tapered wing computed in XFLR5" loading="lazy" />
+      </div>
+      <figcaption>Pressure distribution over the final tapered wing in XFLR5 &mdash; high pressure at the leading edge and root, low pressure across the upper surface and out toward the tips.</figcaption>
+    </figure>
+    <figure>
+      <div class="media-thumb">
+        <img src="../assets/airfoil-wing-design/cl-vs-alpha-three-airfoils.png" alt="Thin Airfoil Theory lift curves for NACA 0012, NACA 2412, and a parabolic camber profile" loading="lazy" />
+      </div>
+      <figcaption>Thin Airfoil Theory lift curves for the three candidate airfoils: same 2&pi; slope, shifted by camber alone.</figcaption>
+    </figure>
+    <figure>
+      <div class="media-thumb">
+        <img src="../assets/airfoil-wing-design/drag-polar-xflr5-vs-theory.png" alt="Drag polar comparing XFLR5 results to the non-elliptical induced drag coefficient expression" loading="lazy" />
+      </div>
+      <figcaption>The XFLR5 drag polar for the 3D tapered wing against the non-elliptical induced-drag expression &mdash; close agreement across the full design envelope.</figcaption>
+    </figure>
+  </div>
+
+  <div class="detail-grid">
+    <article class="prose">
+      <h2>Overview</h2>
+      <p>This project takes a single design question &mdash; what wing should a small 6.2&nbsp;kg, 2&nbsp;m span aircraft flying at 10&nbsp;m/s actually use &mdash; and works it from first principles through to a validated three-dimensional model. It runs in three stages: an analytical Thin Airfoil Theory comparison of three candidate airfoils, a validation pass that pins down exactly where that theory holds by checking it against published NACA wind tunnel data and XFLR5&rsquo;s vortex panel method, and a finite-wing design study that sizes elliptical, tapered, and rectangular configurations before verifying the chosen one in XFLR5&rsquo;s 3D panel solver. The goal wasn&rsquo;t only to land on a wing at the end, but to know at every step how far the tool I was using could actually be trusted.</p>
+
+      <h2>What I did</h2>
+      <p>I started from three candidate airfoils: the symmetric NACA 0012, the cambered NACA 2412, and a parabolic camber profile with &epsilon;&nbsp;=&nbsp;0.03. For each one I wrote out the mean camber line, differentiated it to get dz/dx, and evaluated the Fourier coefficients of the Thin Airfoil Theory solution, A<sub>0</sub>&nbsp;=&nbsp;&alpha;&nbsp;&minus;&nbsp;(1/&pi;)&int;(dz/dx)&nbsp;d&theta; and A<sub>n</sub>&nbsp;=&nbsp;(2/&pi;)&int;(dz/dx)&nbsp;cos&nbsp;n&theta;&nbsp;d&theta;, after the coordinate substitution x&nbsp;=&nbsp;(c/2)(1&nbsp;&minus;&nbsp;cos&nbsp;&theta;). The parabolic profile is piecewise, so its integrals split at &theta;&nbsp;=&nbsp;&pi;/3; carrying them through symbolically gave A<sub>0</sub>&nbsp;=&nbsp;&alpha;&nbsp;&minus;&nbsp;0.66313&epsilon; and A<sub>1</sub>&nbsp;=&nbsp;4.558248&epsilon;, which at &epsilon;&nbsp;=&nbsp;0.03 works out to A<sub>0</sub>&nbsp;=&nbsp;&alpha;&nbsp;&minus;&nbsp;0.0198939 and A<sub>1</sub>&nbsp;=&nbsp;0.13672. NACA 2412 came out at A<sub>0</sub>&nbsp;=&nbsp;&alpha;&nbsp;&minus;&nbsp;0.0044929, A<sub>1</sub>&nbsp;=&nbsp;0.081495, and A<sub>2</sub>&nbsp;=&nbsp;0.013861.</p>
+      <figure class="report-figure figure-pair">
+      <div class="figure-media"><div><img src="../assets/airfoil-wing-design/camber-lines-comparison.png" alt="Mean camber lines" loading="lazy" /><div class="figure-sublabel">Mean camber lines</div></div><div><img src="../assets/airfoil-wing-design/cl-vs-alpha-three-airfoils.png" alt="Lift curves" loading="lazy" /><div class="figure-sublabel">Lift curves</div></div></div>
+      <figcaption>Mean camber lines for the three candidate airfoils with their maximum-camber points marked (left), and the resulting Thin Airfoil Theory lift curves (right). Camber shifts each curve vertically but never changes its slope.</figcaption>
+    </figure>
+      <p>Plotting the camber lines and the resulting C<sub>L</sub>&nbsp;=&nbsp;2&pi;(A<sub>0</sub>&nbsp;+&nbsp;A<sub>1</sub>/2) curves put concrete numbers on the comparison. The parabolic profile carried the most camber, 0.03 at x/c&nbsp;=&nbsp;0.25, with a zero-lift angle of &minus;2.78&deg;. NACA 2412 came second at 0.02 camber, located further aft at x/c&nbsp;=&nbsp;0.40, with &alpha;<sub>L=0</sub>&nbsp;=&nbsp;&minus;2.08&deg;. The symmetric NACA 0012 generated the least lift, with &alpha;<sub>L=0</sub>&nbsp;=&nbsp;0&deg;. All three share the same 2&pi; lift slope, since under Thin Airfoil Theory camber shifts the curve without ever tilting it. Where the camber sits turned out to matter as much as how much of it there is: 2412&rsquo;s aft-loaded camber generally means lower drag, a more gradual approach to stall, and less sensitivity to surface irregularities, while the parabolic profile&rsquo;s forward camber buys more lift at low angles of attack.</p>
+      <p>What the plots make obvious, though, is what the theory leaves out. Every C<sub>L</sub> versus &alpha; curve is a perfectly straight line, because Thin Airfoil Theory neglects viscosity and flow separation entirely &mdash; there is no stall anywhere in it. So before trusting any of these numbers I wanted to know where that linearity stops being true.</p>
+      <figure class="report-figure">
+      <div class="figure-media"><div><img src="../assets/airfoil-wing-design/wind-tunnel-vs-tat-naca2412.png" alt="Thin Airfoil Theory for NACA 2412 overlaid on published wind tunnel data at three Reynolds numbers plus a standard-roughness case. The theory tracks the data closely from about &minus;10&deg; to 12&deg;, then diverges completely once the airfoil stalls." loading="lazy" /></div></div>
+      <figcaption>Thin Airfoil Theory for NACA 2412 overlaid on published wind tunnel data at three Reynolds numbers plus a standard-roughness case. The theory tracks the data closely from about &minus;10&deg; to 12&deg;, then diverges completely once the airfoil stalls.</figcaption>
+    </figure>
+      <p>I overlaid the TAT prediction for NACA 2412 on published wind tunnel data at Re&nbsp;=&nbsp;3.1&times;10<sup>6</sup>, 5.7&times;10<sup>6</sup>, and 8.9&times;10<sup>6</sup>, plus a standard-roughness case at 5.7&times;10<sup>6</sup>. The linear region runs from roughly &minus;10&deg; to 12&deg;, and it holds its extent as Reynolds number climbs &mdash; stall onset barely moves across the three smooth cases. Surface roughness is what actually shrinks it, visibly cutting the usable range. The TAT slope also runs slightly steeper than the tunnel data, which is what you&rsquo;d expect from wall interference, measurement error, and non-uniform freestream flow off the tunnel&rsquo;s fan blades. For the design condition itself I computed the operating Reynolds number directly, Re&nbsp;=&nbsp;&rho;uL/&mu;&nbsp;=&nbsp;(1.225)(10)(0.436)/(1.81&times;10<sup>&minus;5</sup>)&nbsp;&asymp;&nbsp;2.95&times;10<sup>5</sup>.</p>
+      <figure class="report-figure">
+      <div class="figure-media"><div><img src="../assets/airfoil-wing-design/xflr5-vs-tat-naca2412.png" alt="XFLR5&rsquo;s 2D vortex panel method against Thin Airfoil Theory for NACA 2412 at three Reynolds numbers. Inside the linear region the two slopes are effectively identical &mdash; a closer match than the wind tunnel data gave." loading="lazy" /></div></div>
+      <figcaption>XFLR5&rsquo;s 2D vortex panel method against Thin Airfoil Theory for NACA 2412 at three Reynolds numbers. Inside the linear region the two slopes are effectively identical &mdash; a closer match than the wind tunnel data gave.</figcaption>
+    </figure>
+      <p>The second validation used XFLR5&rsquo;s 2D vortex panel method over &alpha;&nbsp;=&nbsp;&minus;8&deg; to 12&deg; at Re&nbsp;=&nbsp;3, 6, and 9&nbsp;&times;&nbsp;10<sup>6</sup>. The agreement here was much tighter: the panel-method slope matches TAT almost exactly through the linear region, closer than the wind tunnel data managed. Within the unstalled range the two methods are effectively interchangeable, and the difference only surfaces at stall, which a panel method can represent and TAT structurally cannot.</p>
+      <p>With NACA 2412 settled on as the section, the next question was planform. I set a two-dimensional baseline first, treating the wing as an infinite-span airfoil at the design condition &mdash; m&nbsp;=&nbsp;6.2&nbsp;kg, V<sub>&infin;</sub>&nbsp;=&nbsp;10&nbsp;m/s, b&nbsp;=&nbsp;2&nbsp;m, c&nbsp;=&nbsp;0.438&nbsp;m, &rho;&nbsp;=&nbsp;1.225&nbsp;kg/m&sup3; &mdash; and solving L&nbsp;=&nbsp;W for the required angle of attack, which gave &alpha;&nbsp;&asymp;&nbsp;0.144&nbsp;rad (8.25&deg;) with zero induced drag by construction. Then I sized three finite-span configurations at fixed planform area and span: elliptical, tapered, and rectangular.</p>
+      <p>The elliptical wing, at AR&nbsp;=&nbsp;4.566 and C<sub>L</sub>&nbsp;=&nbsp;1.13, needed 12.74&deg; of geometric angle of attack and produced the lowest induced drag coefficient of the three, C<sub>Di</sub>&nbsp;=&nbsp;0.089, for a lift-to-drag ratio of 12.7. For the tapered wing I used a taper ratio of &lambda;&nbsp;=&nbsp;0.35, inside the 0.3&ndash;0.4 band that minimizes induced drag, which set the root chord at 0.644&nbsp;m and the tip at 0.227&nbsp;m; with the non-elliptical drag parameter &delta;&nbsp;=&nbsp;2(A<sub>2</sub>/A<sub>1</sub>)&sup2;&nbsp;=&nbsp;0.058 and slope parameter &tau;&nbsp;=&nbsp;0.025, the lift slope dropped to a&nbsp;=&nbsp;4.336&nbsp;rad<sup>&minus;1</sup> and the wing needed 13.37&deg; with C<sub>Di</sub>&nbsp;=&nbsp;0.101. The rectangular wing came out worst on trim angle at 13.95&deg;, with the same C<sub>Di</sub>&nbsp;=&nbsp;0.101, because its higher &tau;&nbsp;=&nbsp;0.15 gives it the shallowest lift slope of the three at a&nbsp;=&nbsp;4.18&nbsp;rad<sup>&minus;1</sup>.</p>
+      <figure class="report-figure">
+      <div class="figure-media"><div><img src="../assets/airfoil-wing-design/cl-vs-alpha-wing-shapes.png" alt="Lift curves for the three finite-span configurations at fixed area and span. The elliptical wing&rsquo;s steeper slope is the aerodynamic optimum; the tapered and rectangular curves sit nearly on top of one another." loading="lazy" /></div></div>
+      <figcaption>Lift curves for the three finite-span configurations at fixed area and span. The elliptical wing&rsquo;s steeper slope is the aerodynamic optimum; the tapered and rectangular curves sit nearly on top of one another.</figcaption>
+    </figure>
+      <p>The elliptical wing wins on every aerodynamic metric &mdash; highest lift coefficient at any angle above the required one, lowest induced drag, best lift-to-drag ratio &mdash; which is the textbook result, since an elliptical lift distribution is the theoretical optimum. But its continuously varying curvature makes it genuinely difficult and expensive to manufacture. The tapered wing gives up roughly 9% of the lift-to-drag ratio and about half a degree of trim angle in exchange for a planform built from straight edges. For an aircraft at this scale that trade is clearly worth taking, so the tapered wing is what I carried forward into the 3D analysis.</p>
+      <figure class="report-figure figure-pair">
+      <div class="figure-media"><div><img src="../assets/airfoil-wing-design/tapered-wing-xflr5-geometry.png" alt="Wing geometry" loading="lazy" /><div class="figure-sublabel">Wing geometry</div></div><div><img src="../assets/airfoil-wing-design/tapered-wing-cp-distribution.png" alt="Pressure distribution" loading="lazy" /><div class="figure-sublabel">Pressure distribution</div></div></div>
+      <figcaption>The tapered wing built in XFLR5: geometry and mesh statistics (left), and the coefficient-of-pressure distribution at 10&nbsp;m/s (right).</figcaption>
+    </figure>
+      <p>To check the tapered design in three dimensions I built it in XFLR5 in inviscid mode with 3D panels: 1,230 mesh elements over a 2&nbsp;m span, a 0.644&nbsp;m root chord, a 0.669&nbsp;m mean aerodynamic chord, and AR&nbsp;=&nbsp;4.592, offsetting the tip section by (C<sub>root</sub>&nbsp;&minus;&nbsp;C<sub>tip</sub>)/2 so the airfoil stays centered at the tip. The pressure distribution at 10&nbsp;m/s reads the way a healthy wing should: high pressure concentrated at the leading edge and root, low pressure across the upper surface and out toward the tips where the lift is being generated, and a smooth spanwise transition between them with none of the abrupt gradients that would signal separation.</p>
+      <figure class="report-figure">
+      <div class="figure-media"><div><img src="../assets/airfoil-wing-design/3d-tapered-vs-2d-airfoil.png" alt="The 3D tapered wing plotted against the 2D NACA 2412 airfoil on the same axes, from both theory and XFLR5. The finite wing&rsquo;s visibly shallower slope is downwash &mdash; the reason a wing can&rsquo;t be signed off on 2D results alone." loading="lazy" /></div></div>
+      <figcaption>The 3D tapered wing plotted against the 2D NACA 2412 airfoil on the same axes, from both theory and XFLR5. The finite wing&rsquo;s visibly shallower slope is downwash &mdash; the reason a wing can&rsquo;t be signed off on 2D results alone.</figcaption>
+    </figure>
+      <p>The most useful comparison was putting the 3D wing and the 2D airfoil on the same axes. The 3D lift curve is visibly shallower: at any given angle of attack the finite wing generates meaningfully less lift than the 2D section does. That is downwash &mdash; tip vortices roll flow from the lower surface around to the upper surface, tilting the local flow, reducing the effective angle of attack, and adding induced drag that simply doesn&rsquo;t exist in two dimensions. It is the concrete reason a wing cannot be signed off on 2D results alone. XFLR5&rsquo;s 3D lift curve tracked the three-dimensional theoretical prediction closely, and its drag polar followed the non-elliptical induced drag expression C<sub>Di</sub>&nbsp;=&nbsp;C<sub>L</sub>&sup2;(1&nbsp;+&nbsp;&delta;)/(&pi;&middot;AR) across the whole range, running slightly below it at high C<sub>L</sub>.</p>
+      <figure class="report-figure">
+      <div class="figure-media"><div><img src="../assets/airfoil-wing-design/drag-polar-xflr5-vs-theory.png" alt="Drag polar for the 3D tapered wing: XFLR5 results against the non-elliptical induced drag expression. The two track closely, with XFLR5 falling slightly below the analytical curve at high lift coefficients." loading="lazy" /></div></div>
+      <figcaption>Drag polar for the 3D tapered wing: XFLR5 results against the non-elliptical induced drag expression. The two track closely, with XFLR5 falling slightly below the analytical curve at high lift coefficients.</figcaption>
+    </figure>
+      <p>The last piece was working through how a single fixed planform gets adapted across flight phases, since takeoff prioritizes lift while cruise prioritizes efficiency. Flaps, hinged surfaces on the trailing edge, extend to increase camber and therefore lift, at the cost of more drag &mdash; an acceptable trade at the low speeds of takeoff and landing but not in cruise. Slats on the leading edge extend forward and also add camber, but their real function is the gap they open: it energizes the boundary layer and delays separation, raising the critical angle of attack so the wing keeps flying at angles that would otherwise stall it. Ailerons work in opposing pairs, one up and one down, deliberately creating a lift differential between the two wings to roll the aircraft about its longitudinal axis. Together they are what lets one fixed wing work across the whole flight envelope.</p>
+
+      <h2>Tools &amp; methods</h2>
+      <p>Derived the Thin Airfoil Theory coefficients analytically by hand, splitting the piecewise camber integrals and carrying them through symbolically, then implemented every camber line, lift curve, and comparison plot in Python with NumPy and Matplotlib. Used XFLR5 in two modes: its 2D vortex panel method to validate Thin Airfoil Theory against a higher-fidelity model, and its 3D inviscid panel solver to model the tapered wing, extract the pressure distribution, and generate the lift curve and drag polar. Used published NACA wind tunnel data across four Reynolds number cases as the experimental reference, and finite-wing theory &mdash; aspect ratio, induced angle of attack, the non-elliptical drag factor &delta;, and the slope parameter &tau; &mdash; for all three planform sizing calculations.</p>
+
+      <h2>Outcome</h2>
+      <p>Converged on a tapered NACA 2412 wing &mdash; 2&nbsp;m span, 0.644&nbsp;m root chord, 0.227&nbsp;m tip chord, taper ratio 0.35, AR&nbsp;&asymp;&nbsp;4.57 &mdash; that trims the 6.2&nbsp;kg aircraft at 13.37&deg; geometric angle of attack with an induced drag coefficient of 0.101 and a lift-to-drag ratio of 11.57, within about 9% of the theoretically optimal elliptical wing while being far simpler to manufacture. Just as valuable was the validation trail behind that choice: Thin Airfoil Theory confirmed accurate against wind tunnel data between roughly &minus;10&deg; and 12&deg;, XFLR5&rsquo;s 2D panel results matching the theory almost exactly inside that range, and the 3D panel results agreeing with both the theoretical lift curve and the non-elliptical induced drag expression across the full design envelope.</p>
+    </article>
+
+    <aside class="sidebar reveal">
+      <h3>Skills &amp; tools</h3>
+      <div class="tag-list">
+        <span class="tag">Thin Airfoil Theory</span>
+        <span class="tag">Aerodynamics</span>
+        <span class="tag">XFLR5</span>
+        <span class="tag">Wing Design</span>
+        <span class="tag">Python</span>
+        <span class="tag">NumPy</span>
+        <span class="tag">Matplotlib</span>
+      </div>
+      
+    </aside>
+  </div>
+
+  <div class="detail-nav">
+    <a href="numerical-simulation-and-analysis-of-uav-pitch-dynamics.html" class="link-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="transform: scaleX(-1);"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>&nbsp;Numerical Methods</a>
+    <a href="../index.html#projects" class="link-arrow">Back to all projects</a>
+    <a href="2d-thermal-finite-element-solver.html" class="link-arrow">Finite Element Analysis&nbsp;<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+</div>
+
+<footer class="footer" id="contact">
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <h3 class="footer-heading">Let&rsquo;s talk engineering.</h3>
+        <p class="text-muted mt-0">Open to new grad and internship opportunities in mechanical &amp; aerospace engineering.</p>
+      </div>
+      <div class="footer-links">
+        <a href="mailto:duvvapu2@illinois.edu">Email</a>
+        <a href="https://www.linkedin.com/in/suraj-duvvapu-634833288/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/SurajDuvvapu" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span id="year"></span> Suraj Duvvapu</span>
+      <span>Built with plain HTML, CSS &amp; JS &middot; Deployed on GitHub Pages</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../script.js"></script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
